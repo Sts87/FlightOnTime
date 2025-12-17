@@ -1,0 +1,19 @@
+# Ignorar archivos del entorno Python
+__pycache__/
+*.pyc
+venv/
+.venv/
+
+# Ignorar archivos temporales o de OS
+.DS_Store
+*.swp
+
+# Ignorar Modelos Entrenados
+*.pkl
+*.h5
+*.joblib
+models/
+
+# Ignorar salidas de jupyter
+.ipynb_checkpoints
+*output_files/
