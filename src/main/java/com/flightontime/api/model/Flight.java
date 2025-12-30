@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
-@Data
+
 public class Flight {
 
     @Id
@@ -28,7 +28,7 @@ public class Flight {
     @Column(nullable = false)
     private String destino;
 
-    @Column(nullable = false)
+    @Column(name = "fecha_de_partida", nullable = false)
     private LocalDateTime fechaDePartida;
 
     @Column(nullable = false)
