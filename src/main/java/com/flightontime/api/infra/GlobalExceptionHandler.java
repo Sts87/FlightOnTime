@@ -14,9 +14,13 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<List<ValidationErrorDTO>> handleValidationErrors(MethodArgumentNotValidException ex) {
         // Convierte el error feo de Java en una lista de errores clara
+
+        List<FieldError> fieldErrors = ex.getFieldErrors();
+
         var errores = ex.getFieldErrors().stream()
                 .map(ValidationErrorDTO::new)
                 .toList();
+
         return ResponseEntity.badRequest().body(errores);
     }
 
@@ -26,4 +30,5 @@ public class GlobalExceptionHandler {
             this(error.getField(), error.getDefaultMessage());
         }
     }
+
 }
