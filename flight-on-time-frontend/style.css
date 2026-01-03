@@ -1,0 +1,255 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    letter-spacing: 0.1em;
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background: linear-gradient(to top,  #5744b6, #cfc7fa);
+    /* background: linear-gradient(to top,#ddd4c8,  #a3a3ff, #5744b6); */
+    /* background-color: rgb(185, 228, 232); */
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* asegura ocupar toda la pantalla */
+    /* font-family: Arial, Helvetica, sans-serif; */
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+}
+
+header {
+    /* background-color: #333; */
+    /* background: linear-gradient(to bottom, #62afbe, #923f60); */
+    /* background: linear-gradient(to bottom, #6262be, #4d3f92); */
+    backdrop-filter: blur(10px);
+    color: #000;
+    padding: 20px;
+    text-align: center;
+}
+
+header h1 {
+    margin: 0;
+}
+
+header nav {
+    display: flex;
+    justify-content: space-evenly;
+    /* margin-top: 20px; */
+    align-items: center;
+    padding: 1em;
+}
+
+header nav ul {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+header nav ul li {
+    margin: 0 10px;
+}
+
+header nav ul li a {
+    color: #000;
+    text-decoration: none;
+}
+
+main {
+    flex: 1;
+    margin: 0 auto;
+    max-width: 800px;
+    padding: 3em;
+    width: 70%;
+    backdrop-filter: blur(100px);
+    background-color: hsla(100, 100%, 100%, 0.15);
+    /* background-color: #ccc; */
+    border-radius: 10px;
+}
+
+.about {
+    display: flex;
+    /* gap: 1em; */
+}
+
+.about img {
+    max-width: 300px;
+    border-radius: 10px;
+}
+
+main section {
+    margin-bottom: 20px;
+}
+
+main section h2 {
+    margin-bottom: 10px;
+}
+
+main section p {
+    margin-bottom: 20px;
+}
+
+main section ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+main section ul li {
+    margin-bottom: 10px;
+}
+
+main section ul li a {
+    color: #333;
+    text-decoration: none;
+}
+
+main section ul li a:hover {
+    color: #000;
+}   
+
+main section ul li a:visited {
+    color: #333;
+}
+
+main section ul li a:active {
+    color: #333;
+}
+
+main section ul li a:focus {
+    color: #333;
+}
+
+article {
+    margin-bottom: 20px;
+}
+
+article h2 {
+    margin-bottom: 10px;
+}
+
+article p {
+    margin-bottom: 20px;
+}
+
+article a {
+    color: #333;
+    text-decoration: none;
+}
+
+article a:hover {
+    color: #000;
+}   
+
+article a:visited {
+    color: #333;
+}
+
+article a:active {
+    color: #333;
+}
+
+article a:focus {
+    color: #333;
+}
+
+form {
+    /* margin-bottom: 20px; */
+    display: flex;
+    flex-direction: column;
+    /* align-items: center; */
+    /* justify-content: center; */
+    /* width: 100%; */
+    gap: .4em;
+
+}
+
+form label {
+    display: block;
+    /* margin-bottom: 5px; */
+}
+
+form input[type="text"],
+form input[type="email"],
+form textarea {
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    display: block;
+    font-size: 16px;
+    /* margin-bottom: 10px; */
+    padding: 8px;
+    width: 96%;
+}
+
+form button {
+    /* background-color: #333; */
+    background-color: #5744b6;
+    border: none;
+    border-radius: 3px;
+    color: #fff;
+    cursor: pointer;
+    font-size: 16px;
+    /* justify-content: center; */
+    padding: 10px;
+    width: 100%;
+}   
+
+form button:hover {
+    background-color: #337;
+}
+
+form button:active {
+    background-color: #000;
+}
+
+form button:focus {
+    background-color: #000;
+}
+
+footer {
+    backdrop-filter: blur(10px);
+    /* background-color: #333; */
+    /* background: linear-gradient(to bottom, #6262be, #4d3f92); */
+    /* background: linear-gradient(to bottom, #62afbe, #3f9260); */
+    color: #000;
+    padding: 20px;
+    text-align: center;
+}
+
+footer p {
+    margin: 0;
+}
+
+@media (max-width: 600px) {
+    .about {
+        flex-direction: column;
+        align-items: center;
+        gap: 1em;
+        width: 100%;
+    }
+
+    .about img {
+        width: 50%;
+        margin-bottom: 1em;
+    }
+
+    nav {
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+
+    nav ul {
+        flex-direction: column;
+        align-items: center;
+    }
+}
