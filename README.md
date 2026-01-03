@@ -152,11 +152,13 @@ POST /predict
 
 ```json
 {
-  "airline": "AA",
-  "origin": "SCL",
-  "destination": "LIM",
-  "departure_time": "2025-11-10T14:30:00",
-  "distance_km": 350
+  "Airline": "AA",
+  "AirportFrom": "SFO",
+  "AirportTo": "LAX",
+  "Time": 1430,
+  "Length": 120,
+  "TimeDay": "Afternoon",
+  "Duration": "Medium"
 }
 ```
 
@@ -164,8 +166,9 @@ POST /predict
 
 ```json
 {
-  "prevision": "DELAYED",
-  "probability": 0.78
+  "prediction": "Retrasado",
+  "probability": 0.73,
+  "threshold": 0.325
 }
 ```
 
