@@ -167,6 +167,11 @@ article a:focus {
     color: #333;
 }
 
+#result {
+    padding: 1em;
+    text-align: center;
+}
+
 form {
     /* margin-bottom: 20px; */
     display: flex;
@@ -185,6 +190,9 @@ form label {
 
 form input[type="text"],
 form input[type="email"],
+form input[type="time"],
+form input[type="date"],
+form input[type="number"],
 form textarea {
     border: 1px solid #ccc;
     border-radius: 3px;
