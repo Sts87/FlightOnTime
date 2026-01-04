@@ -38,7 +38,10 @@ public class Flight {
     @Column(nullable = false)
     private FlightStatus estado;
 
-    public Flight(FlightData datos) {
+    @Column(nullable = false)
+    private Double probabilidad;
+
+    public Flight(FlightData datos, FlightStatus estado, Double probabilidad) {
         this.id = null;
         this.aerolinea = datos.aerolinea();
         this.origen = datos.origen();
