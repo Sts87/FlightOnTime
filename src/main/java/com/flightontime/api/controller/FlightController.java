@@ -31,6 +31,14 @@ public class FlightController {
                 .body(new FlightResponse(vuelo));
     }
 
+
+    @PostMapping("/predict")
+    public ResponseEntity<PredictionResponse> predict(
+            @RequestBody @Valid FlightData datos) {
+
+        return ResponseEntity.ok(service.predict(datos));
+    }
+
     @GetMapping
     public Page<Flight> listar(@PageableDefault(size=10, sort={"aerolinea"}) Pageable paginacion) {
         return service.listarTodo(paginacion);
