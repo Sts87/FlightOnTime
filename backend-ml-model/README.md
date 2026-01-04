@@ -18,7 +18,7 @@ Se expone como una **API REST** que puede ser consumida por cualquier frontend o
 1. **Clonar el repositorio**:
 ```bash
 git clone https://github.com/Sts87/FlightOnTime.git
-cd FlightOnTime
+cd FlightOnTime/backend-ml-model
 ````
 
 2. **Crear un entorno virtual (opcional pero recomendado)**:
@@ -53,13 +53,13 @@ python -c "import joblib, pandas, sklearn; print('✅ Dependencias OK')"
 1. Entrar a la carpeta del proyecto:
 
 ```bash
-cd app
+cd FlightOnTime/backend-ml-model
 ```
 
 2. Levantar la API con Uvicorn:
 
 ```bash
-uvicorn main:app --reload
+uvicorn app.main:app --reload
 ```
 
 3. La API quedará corriendo en:

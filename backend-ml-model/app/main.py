@@ -1,4 +1,5 @@
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from app.schemas import FlightDelayRequest, PredictionResponse
 from app.model import load_bundle
 from app.utils import build_features
@@ -7,6 +8,14 @@ import pandas as pd
 app = FastAPI(
     title="FlightOnTime ML Service",
     version="0.1.0",
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"], # O el dominio: ["http://localhost:5500"]
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 @app.on_event("startup")
