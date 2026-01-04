@@ -2,6 +2,7 @@ package com.flightontime.api.service;
 
 import com.fasterxml.jackson.databind.deser.DataFormatReaders;
 import com.flightontime.api.dto.FlightData;
+import com.flightontime.api.dto.PredictionResponse;
 import com.flightontime.api.model.Flight;
 import com.flightontime.api.model.FlightStatus;
 import com.flightontime.api.repository.FlightRepository;
@@ -19,7 +20,6 @@ public class FlightService {
 
     @Transactional
     public Flight guardar(FlightData datos) {
-
         double probabilidad = calcularProbabilidad(datos);
         FlightStatus estado = calcularEstado(probabilidad);
 
@@ -50,13 +50,13 @@ public class FlightService {
     private double calcularProbabilidad(FlightData datos) {
         double probabilidad = 0.1;
 
-        if (datos.distancia() > 2000) {
+        if (datos.distancia() > 800) {
             probabilidad += 0.2;
         }
 
         int hora = datos.fechaDePartida().getHour();
         if (hora >= 18 && hora <= 22) {
-            probabilidad += 0.15;
+            probabilidad += 0.25;
         }
 
         return Math.min(probabilidad, 1.0);

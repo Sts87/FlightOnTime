@@ -2,6 +2,7 @@ package com.flightontime.api.controller;
 
 import com.flightontime.api.dto.FlightData;
 import com.flightontime.api.dto.FlightResponse;
+import com.flightontime.api.dto.PredictionResponse;
 import com.flightontime.api.model.Flight;
 import com.flightontime.api.service.FlightService;
 import jakarta.validation.Valid;
@@ -25,6 +26,7 @@ public class FlightController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<FlightResponse> guardar(@RequestBody @Valid FlightData datos) {
+
         Flight vuelo = service.guardar(datos);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
@@ -41,6 +43,7 @@ public class FlightController {
 
     @GetMapping
     public Page<Flight> listar(@PageableDefault(size=10, sort={"aerolinea"}) Pageable paginacion) {
+
         return service.listarTodo(paginacion);
     }
 }
