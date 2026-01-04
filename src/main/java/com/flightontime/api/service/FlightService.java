@@ -27,6 +27,21 @@ public class FlightService {
         return repository.save(vuelo);
     }
 
+     @Transactional
+    public PredictionResponse predict(FlightData datos) {
+        double probabilidad = calcularProbabilidad(datos);
+        FlightStatus estado = calcularEstado(probabilidad);
+
+        double probabilidadRedondeada =
+                Math.round(probabilidad * 100.0) / 100.0;
+
+         Flight vuelo = new Flight(datos, estado, probabilidad);
+         repository.save(vuelo);
+
+        return new PredictionResponse(estado, probabilidadRedondeada);
+     }
+
+
     @Transactional(readOnly = true)
     public Page<Flight> listarTodo(Pageable paginacion) {
         return repository.findAll(paginacion);
