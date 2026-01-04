@@ -47,9 +47,6 @@ public record FlightData(
                 value = ValidationConstants.MIN_DISTANCE_REQUIRED,
                 message = "La distancia mínima de vuelo debe ser de {value} millas"
         )
-        Integer distancia,
-
-        @NotNull(message = "El estado del vuelo es obligatorio")
-        FlightStatus estado
+        Integer distancia
 ) {
 }
