@@ -48,6 +48,7 @@ public class Flight {
         this.destino = datos.destino();
         this.fechaDePartida = datos.fechaDePartida();
         this.distancia = datos.distancia();
-        this.estado = datos.estado();
+        this.estado = estado;
+        this.probabilidad = probabilidad;
     }
 }
