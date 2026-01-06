@@ -1,7 +1,7 @@
 # ✈️ FlightOnTime – API de Predicción de Retrasos de Vuelos
 
 ## 📌 Descripción
-FlightOnTime es un microservicio en Python que predice si un vuelo llegará retrasado usando datos históricos y un modelo de Machine Learning (Logistic Regression con umbral optimizado).  
+FlightOnTime FastAPI es un microservicio en Python que predice si un vuelo llegará retrasado usando datos históricos y un modelo de Machine Learning (Logistic Regression con umbral optimizado).  
 Se expone como una **API REST** que puede ser consumida por cualquier frontend o servicio backend, incluyendo proyectos en Java.
 
 ---
@@ -26,7 +26,7 @@ cd FlightOnTime/backend-ml-model
 ```bash
 python -m venv venv
 ```
-#### Activar entorno
+3. **Activar entorno**:
 ```bash
 # Windows:
 . venv/Scripts/activate
@@ -37,19 +37,19 @@ python -m venv venv
 source venv/bin/activate
 ```
 
-3. **Instalar dependencias**:
+4. **Instalar dependencias**:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-> ⚠️ Nota: si tu `.gitignore` excluye el modelo `flight_delay_bundle.joblib`, asegúrate de tenerlo en la carpeta `app/` para que la API funcione.
-
-4. **Verificar instalación**:
+5. **Verificar instalación**:
 
 ```bash
 python -c "import sklearn, joblib; print('✅ sklearn:', sklearn.__version__); print('✅ joblib:', joblib.__version__)"
 ```
+
+> ⚠️ Nota: si tu `.gitignore` excluye el modelo `flight_delay_bundle.joblib` o `flight_delay_model.onnx`, asegúrate de tenerlo en la carpeta `app/model/` para que la API funcione.
 
 ---
 
@@ -75,6 +75,12 @@ http://127.0.0.1:8000
 
 ---
 
+4. Documentación de la API REST:
+
+```
+http://127.0.0.1:8000/docs
+```
+
 ## 🧪 Ejemplo de Uso (curl)
 
 ```bash
@@ -86,8 +92,8 @@ curl -X POST http://127.0.0.1:8000/predict \
     "AirportTo": "LAX",
     "Time": 1430,
     "Length": 120,
-    "TimeDay": "Afternoon",
-    "Duration": "Medium"
+    "TimeDay": "Afternoon", #Hay que retirar y adaptar a nuevo modelo
+    "Duration": "Medium" #Hay que retirar y adaptar a nuevo modelo
   }'
 ```
 
@@ -113,6 +119,7 @@ FlightOnTime/
 │  ├─ model.py       # Carga y manejo del modelo ML
 ├─ model/
 │  ├─ flight_delay_bundle.joblib  # Modelo exportado
+│  ├─ flight_delay_model.onnx  # Modelo exportado
 ├─ requirements.txt
 ├─ README.md
 ```
@@ -146,6 +153,6 @@ Response:
 
 ## ✅ Buenas Prácticas
 
-* Mantener el modelo actualizado en `flight_delay_bundle.joblib`.
+* Mantener el modelo actualizado en `flight_delay_bundle.joblib` o `flight_delay_model.onnx`.
 * Siempre usar un entorno virtual para evitar conflictos de dependencias.
 * Versionar las dependencias en `requirements.txt`.
