@@ -25,9 +25,14 @@ cd FlightOnTime/backend-ml-model
 
 ```bash
 python -m venv venv
-# Activar entorno
+```
+#### Activar entorno
+```bash
 # Windows:
-source venv\Scripts\activate
+. venv/Scripts/activate
+```
+
+```bash
 # Mac/Linux:
 source venv/bin/activate
 ```
@@ -43,7 +48,7 @@ pip install -r requirements.txt
 4. **Verificar instalación**:
 
 ```bash
-python -c "import joblib, pandas, sklearn; print('✅ Dependencias OK')"
+python -c "import sklearn, joblib; print('✅ sklearn:', sklearn.__version__); print('✅ joblib:', joblib.__version__)"
 ```
 
 ---
@@ -91,8 +96,7 @@ curl -X POST http://127.0.0.1:8000/predict \
 ```json
 {
   "prediction": "Retrasado",
-  "probability": 0.73,
-  "threshold": 0.325
+  "probability": 0.73
 }
 ```
 
@@ -128,16 +132,13 @@ Body: {
   "AirportFrom": "SFO",
   "AirportTo": "LAX",
   "Time": 1430,
-  "Length": 120,
-  "TimeDay": "Afternoon",
-  "Duration": "Medium"
+  "Length": 120
 }
 
 Response:
 {
   "prediction": "Retrasado",
-  "probability": 0.73,
-  "threshold": 0.325
+  "probability": 0.73
 }
 ```
 
@@ -148,5 +149,3 @@ Response:
 * Mantener el modelo actualizado en `flight_delay_bundle.joblib`.
 * Siempre usar un entorno virtual para evitar conflictos de dependencias.
 * Versionar las dependencias en `requirements.txt`.
-
-```
