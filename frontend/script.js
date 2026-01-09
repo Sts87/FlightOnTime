@@ -3,22 +3,6 @@ const result = document.getElementById('result');
 const csvInput = document.getElementById("csvFile");
 const formInputs = document.querySelectorAll("#flightForm input:not(#csvFile)");
 
-
-
-// function getTimeDay(hour) {
-//     if (hour >= 6 && hour < 12) return 'Morning';
-//     if (hour >= 12 && hour < 18) return 'Afternoon';
-//     if (hour >= 18 && hour < 24) return 'Evening';
-//     return 'Night';
-// }
-
-// function categorizeDuration(duration) {
-//     if (duration <= 60) return 'Short';
-//     if (duration <= 180) return 'Medium';
-//     if (duration <= 960) return 'Long';
-//     return 'Very Long';
-// }
-
 function getDayOfWeek(dateString) {
     const date = new Date(dateString);
     return date.getDay() === 0 ? 7 : date.getDay();
@@ -31,7 +15,6 @@ csvInput.addEventListener("change", () => {
         input.disabled = hasCsv;
     });
 });
-
 
 form.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -49,7 +32,7 @@ form.addEventListener('submit', async (e) => {
             csvFormData.append("file", csvFile);
 
             const response = await fetch(
-                "http://127.0.0.1:8000/predict/csv",
+                "http://localhost:8080/predict/csv",
                 {
                     method: "POST",
                     body: csvFormData
@@ -96,8 +79,6 @@ form.addEventListener('submit', async (e) => {
             AirportTo: data.destination,
             Time: timeInMinutes,
             Length: numericLength,
-            //TimeDay: timeDay,
-            //Duration: durationCategory,
             DayOfWeek: dayOfWeek
         };
         console.log('Payload:', payload);
@@ -124,5 +105,4 @@ form.addEventListener('submit', async (e) => {
         console.error(error);
         result.textContent = 'Error al obtener la predicción. Por favor, inténtelo de nuevo más tarde.';
     }
-
 });
