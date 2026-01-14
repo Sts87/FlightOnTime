@@ -1,70 +1,54 @@
 package com.flightontime.api.service;
 
-import com.fasterxml.jackson.databind.deser.DataFormatReaders;
 import com.flightontime.api.dto.FlightData;
-import com.flightontime.api.dto.PredictionResponse;
 import com.flightontime.api.model.Flight;
-import com.flightontime.api.model.FlightStatus;
 import com.flightontime.api.repository.FlightRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * Servicio de dominio para gestionar entidades Flight.
+ * Responsable de operaciones CRUD y consultas sobre vuelos.
+ */
 @Service
 public class FlightService {
 
-    @Autowired
-    private FlightRepository repository;
+    private final FlightRepository repository;
 
-    @Transactional
-    public Flight guardar(FlightData datos) {
-        double probabilidad = calcularProbabilidad(datos);
-        FlightStatus estado = calcularEstado(probabilidad);
-
-        Flight vuelo = new Flight(datos, estado, probabilidad);
-        return repository.save(vuelo);
+    public FlightService(FlightRepository repository) {
+        this.repository = repository;
     }
 
-     @Transactional
-    public PredictionResponse predict(FlightData datos) {
-        double probabilidad = calcularProbabilidad(datos);
-        FlightStatus estado = calcularEstado(probabilidad);
+    /**
+     * Guarda un vuelo en la base de datos.
+     *
+     * @deprecated Usar PredictionService.predict() que incluye la lógica de predicción
+     */
+    @Deprecated
+    @Transactional
+    public Flight guardar(FlightData datos) {
+        // Este método se mantiene por compatibilidad pero se recomienda
+        // usar PredictionService para nueva funcionalidad
+        throw new UnsupportedOperationException(
+                "Usar PredictionService.predict() en lugar de este método"
+        );
+    }
 
-        double probabilidadRedondeada =
-                Math.round(probabilidad * 100.0) / 100.0;
-
-         Flight vuelo = new Flight(datos, estado, probabilidad);
-         repository.save(vuelo);
-
-        return new PredictionResponse(estado, probabilidadRedondeada);
-     }
-
-
+    /**
+     * Lista todos los vuelos con paginación.
+     */
     @Transactional(readOnly = true)
     public Page<Flight> listarTodo(Pageable paginacion) {
         return repository.findAll(paginacion);
     }
 
-    private double calcularProbabilidad(FlightData datos) {
-        double probabilidad = 0.1;
-
-        if (datos.distancia() > 800) {
-            probabilidad += 0.2;
-        }
-
-        int hora = datos.fechaDePartida().getHour();
-        if (hora >= 18 && hora <= 22) {
-            probabilidad += 0.25;
-        }
-
-        return Math.min(probabilidad, 1.0);
-    }
-
-    private FlightStatus calcularEstado(double probabilidad) {
-        return probabilidad >= 0.5
-                ? FlightStatus.DELAYED
-                : FlightStatus.ON_TIME;
+    /**
+     * Guarda un vuelo (uso interno para otros servicios).
+     */
+    @Transactional
+    public Flight save(Flight flight) {
+        return repository.save(flight);
     }
 }
