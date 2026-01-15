@@ -1,77 +1,27 @@
-import pandas as pd
-def build_features(req):
-    return pd.DataFrame([req.model_dump()])
+import json
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parent
+MODEL_DIR = BASE_DIR.parent / "model"
+
+with open(MODEL_DIR / "airport_mappings.json", "r") as f:
+    mappings = json.load(f)
+
+FROM_MAP = mappings["from_map"]
+TO_MAP = mappings["to_map"]
+GLOBAL_MEAN = mappings["global_mean"]
 
 
-# # def get_time_day(time: int) -> str:
-# #     if 0 <= time < 600:
-# #         return "Early morning"
-# #     elif 600 <= time < 1200:
-# #         return "Morning"
-# #     elif 1200 <= time < 1800:
-# #         return "Afternoon"
-# #     else:
-# #         return "Night"
-    
-# # def get_duration(length: int) -> str:
-# #     if 0 <= length < 90:
-# #         return "Short"
-# #     elif 90 <= length < 180:
-# #         return "Medium"
-# #     elif 180 <= length < 960:
-# #         return "Long"
+def build_features(data):
+    """
+    Transforma FlightInput (API) a features listos para ONNX
+    """
 
-# # def build_features(req):
-# #     data = {
-# #         "Airline": req.Airline,
-# #         "AirportFrom": req.AirportFrom,
-# #         "AirportTo": req.AirportTo,
-# #         "DayOfWeek": req.DayOfWeek,
-# #         "Time": req.Time,
-# #         "Length": req.Length,
-# #         "TimeDay": get_time_day(req.Time),
-# #         "Duration": get_duration(req.Length),
-# #     }
-# #     return pd.DataFrame([data])
-
-
-# import pandas as pd
-
-# def build_features(req):
-#     """
-#     Convierte request → dataframe EXACTO que espera el pipeline
-#     """
-
-#     # TimeDay: mañana / tarde / noche (según lógica del notebook)
-#     hour = req.Time // 100
-
-#     if hour < 12:
-#         time_day = "morning"
-#     elif hour < 18:
-#         time_day = "afternoon"
-#     else:
-#         time_day = "night"
-
-#     # Duration: en este dataset es equivalente a Length
-#     duration = req.Length
-
-#     # return pd.DataFrame([{
-#     #     "Airline": req.Airline,
-#     #     "AirportFrom": req.AirportFrom,
-#     #     "AirportTo": req.AirportTo,
-#     #     "TimeDay": time_day,
-#     #     "Duration": duration,
-#     #     "Time": req.Time,
-#     #     "Length": req.Length,
-#     # }])
-#     return pd.DataFrame([{
-#         "Airline": req.Airline,
-#         "AirportFrom": req.AirportFrom,
-#         "AirportTo": req.AirportTo,
-#         "DayOfWeek": req.DayOfWeek,
-#         "Time": req.Time,
-#         "Length": req.Length,
-#         # SOLO si tu modelo fue entrenado con estas:
-#         "TimeDay": getattr(req, "TimeDay", None),
-#         "Duration": getattr(req, "Duration", None),
-#     }])
+    return {
+        "Airline": data.Airline,
+        "AirportFrom": float(FROM_MAP.get(data.AirportFrom, GLOBAL_MEAN)),
+        "AirportTo": float(TO_MAP.get(data.AirportTo, GLOBAL_MEAN)),
+        "DayOfWeek": int(data.DayOfWeek),
+        "Length": float(data.Length),
+        "Hour": float(data.Time),
+    }

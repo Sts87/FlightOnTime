@@ -1,17 +1,13 @@
 from pydantic import BaseModel
-from datetime import datetime
 
-class FlightDelayRequest(BaseModel):
+class FlightInput(BaseModel):
     Airline: str
     AirportFrom: str
     AirportTo: str
-    #DayOfWeek: int
-    Time: int
-    Length: int
-    TimeDay: str
-    Duration: str
+    DayOfWeek: int
+    Length: float
+    Time: int #HHMM format
 
 class PredictionResponse(BaseModel):
-    prediction: str
+    prediction: int
     probability: float
-    threshold: float
