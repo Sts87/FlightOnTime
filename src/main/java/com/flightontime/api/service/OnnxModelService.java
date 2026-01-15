@@ -1,6 +1,7 @@
 package com.flightontime.api.service;
 
 import ai.onnxruntime.*;
+import ai.onnxruntime.OnnxMap;
 import com.flightontime.api.exception.ModelLoadException;
 import com.flightontime.api.exception.PredictionException;
 import jakarta.annotation.PostConstruct;
@@ -12,6 +13,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -21,7 +23,7 @@ import java.util.Map;
 @Service
 public class OnnxModelService {
 
-    @Value("${model.path:models/flight_delay_model.onnx}")
+    @Value("${model.path:models/flight-model.onnx}")
     private String modelPath;
 
     private OrtEnvironment environment;
@@ -159,64 +161,43 @@ public class OnnxModelService {
      * @return Map con los resultados: "probability" y "label"
      */
     public Map<String, Object> predict(Map<String, OnnxTensor> features) {
-        try {
-            OrtSession.Result result = session.run(features);
+        // Usamos try-with-resources para asegurar que el Result se cierre y libere memoria
+        try (OrtSession.Result result = session.run(features)) {
 
-            // Obtener label predicho (esto funciona correctamente)
+            // 1. Obtener el label predicho (Clase 0 o 1)
             long[] labels = (long[]) result.get("output_label").get().getValue();
             long predictedLabel = labels[0];
 
-            // output_probability es una secuencia de OnnxMap
+            // 2. Obtener las probabilidades (ZipMap)
+            // ZipMap siempre devuelve una secuencia (List) de mapas
             Object probabilityOutput = result.get("output_probability").get().getValue();
 
-            double probabilityDelayed;
+            double probabilityDelayed = 0.0;
 
-            System.out.println("🔍 Tipo de probabilityOutput: " + probabilityOutput.getClass());
-            System.out.println("🔍 Contenido: " + probabilityOutput);
-
-            if (probabilityOutput instanceof java.util.List) {
-                // Es una lista
-                @SuppressWarnings("unchecked")
-                java.util.List<?> probList = (java.util.List<?>) probabilityOutput;
-
-                System.out.println("📋 Tamaño de la lista: " + probList.size());
-
-                // El primer elemento es un OnnxMap
+            if (probabilityOutput instanceof List<?> probList && !probList.isEmpty()) {
                 Object firstElement = probList.get(0);
-                System.out.println("🔍 Tipo del primer elemento: " + firstElement.getClass());
-                System.out.println("🔍 Contenido del primer elemento: " + firstElement);
 
-                // OnnxMap implementa Map<K,V> internamente, intentemos castearlo
-                if (firstElement instanceof Map) {
-                    @SuppressWarnings("unchecked")
-                    Map<?, ?> probMap = (Map<?, ?>) firstElement;
+                // El "truco" está aquí: OnnxMap tiene su propio método .getValue()
+                if (firstElement instanceof OnnxMap onnxMap) {
+                    // El keyType es INT64 (Long), valueType es FLOAT (Float)
+                    Map<Long, Float> mapValores = (Map<Long, Float>) onnxMap.getValue();
 
-                    System.out.println("📊 Mapa de probabilidades: " + probMap);
-
-                    // Buscar la probabilidad de la clase 1 (DELAYED)
-                    Object prob1 = probMap.get(1L);
-                    if (prob1 == null) {
-                        prob1 = probMap.get(1);
+                    // Buscamos la probabilidad de la clase 1 (Retrasado)
+                    // Usamos 1L porque el tipo es Long
+                    Float prob1 = mapValores.get(1L);
+                    if (prob1 != null) {
+                        probabilityDelayed = prob1.doubleValue();
                     }
-
-                    if (prob1 instanceof Number) {
-                        probabilityDelayed = ((Number) prob1).doubleValue();
-                    } else {
-                        throw new PredictionException("No se pudo obtener la probabilidad de clase 1");
-                    }
-
-                } else {
-                    // Si no es un Map, intentar usar toString() para parsear
-                    String elementStr = firstElement.toString();
-                    System.out.println("⚠️ No es un Map, parseando string: " + elementStr);
-
-                    // Ejemplo: {0=0.35, 1=0.65}
-                    // Extraer el valor después de "1="
-                    probabilityDelayed = extractProbabilityFromString(elementStr);
                 }
-
+                // Caso alternativo si por alguna razón ya viene como Map estándar
+                else if (firstElement instanceof Map<?, ?> standardMap) {
+                    Object p1 = standardMap.get(1L);
+                    if (p1 instanceof Number num) {
+                        probabilityDelayed = num.doubleValue();
+                    }
+                }
             } else {
-                throw new PredictionException("Formato de output_probability no reconocido: " + probabilityOutput.getClass());
+                throw new PredictionException("El formato de salida de probabilidades es inválido o está vacío");
             }
 
             return Map.of(
@@ -225,7 +206,7 @@ public class OnnxModelService {
             );
 
         } catch (OrtException e) {
-            throw new PredictionException("Error al ejecutar la predicción: " + e.getMessage(), e);
+            throw new PredictionException("Error al ejecutar la predicción ONNX: " + e.getMessage(), e);
         }
     }
 

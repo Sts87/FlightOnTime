@@ -1,6 +1,7 @@
 package com.flightontime.api.infra;
 
 import com.flightontime.api.exception.*;
+import com.flightontime.api.service.CsvService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -12,6 +13,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -59,13 +61,35 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(CsvParsingException.class)
-    public ResponseEntity<ErrorResponseDTO> handleCsvParsingException(CsvParsingException ex) {
-        ErrorResponseDTO error = new ErrorResponseDTO(
-                "ERROR_PARSING_CSV",
-                ex.getMessage(),
-                HttpStatus.BAD_REQUEST.value()
-        );
-        return ResponseEntity.badRequest().body(error);
+    public ResponseEntity<?> handleCsvParsingException(CsvParsingException ex) {
+
+        // Si tiene errores detallados, devolver respuesta estructurada
+        if (ex.hasDetailedErrors()) {
+            List<CsvErrorDetail> errorDetails = ex.getErrors().stream()
+                    .map(error -> new CsvErrorDetail(
+                            error.getLineNumber(),
+                            error.getError(),
+                            error.getLineContent()
+                    ))
+                    .collect(Collectors.toList());
+
+            CsvErrorResponseDTO response = new CsvErrorResponseDTO(
+                    "ERROR_VALIDACION_CSV",
+                    ex.getMessage(),
+                    HttpStatus.BAD_REQUEST.value(),
+                    errorDetails
+            );
+
+            return ResponseEntity.badRequest().body(response);
+        } else {
+            // Error genérico de CSV
+            ErrorResponseDTO error = new ErrorResponseDTO(
+                    "ERROR_PARSING_CSV",
+                    ex.getMessage(),
+                    HttpStatus.BAD_REQUEST.value()
+            );
+            return ResponseEntity.badRequest().body(error);
+        }
     }
 
     @ExceptionHandler(InvalidFileException.class)
@@ -130,6 +154,24 @@ public class GlobalExceptionHandler {
     ) {
         public ErrorResponseDTO(String codigo, String mensaje, int status) {
             this(codigo, mensaje, status, LocalDateTime.now());
+        }
+    }
+
+    private record CsvErrorDetail(
+            int lineaNumero,
+            String error,
+            String contenidoLinea
+    ) {}
+
+    private record CsvErrorResponseDTO(
+            String codigo,
+            String mensaje,
+            int status,
+            List<CsvErrorDetail> errores,
+            LocalDateTime timestamp
+    ) {
+        public CsvErrorResponseDTO(String codigo, String mensaje, int status, List<CsvErrorDetail> errores) {
+            this(codigo, mensaje, status, errores, LocalDateTime.now());
         }
     }
 }
