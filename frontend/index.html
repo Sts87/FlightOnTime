@@ -21,10 +21,10 @@
     <header>
         <nav>
             <h1>✈️FlightOnTime</h1>
-            <ul>
+            <!-- <ul>
                 <li><a href="index.html">Home</a></li>
                 <li><a href="contact.html">Contacto</a></li>
-            </ul>
+            </ul> -->
         </nav>
     </header>
     
@@ -32,12 +32,58 @@
         <section class="prediction-form">
             <form id="flightForm" action="#" method="post">
                 <h2>Predicción de retrasos de vuelos 🔮</h2>
-                <label for="aeroline">Aerolinea:</label>
-                <input type="text" id="aeroline" name="aeroline" required>
-                <label for="origin">Origen:</label>
-                <input type="text" id="origin" name="origin" required>
-                <label for="destination">Destino:</label>
-                <input type="text" id="destination" name="destination" required>
+                <!-- <label for="aeroline">Aerolinea:</label> -->
+                <!-- <input type="text" id="aeroline" name="aeroline" required> -->
+                
+                <label for="airline">Aerolínea</label>
+                <input
+                    type="text"
+                    id="airline"
+                    name="aeroline"
+                    list="airlines"
+                    required
+                />
+
+                <datalist id="airlines">
+                    <option value="AA">American Airlines</option>
+                    <option value="UA">United Airlines</option>
+                    <option value="DL">Delta Airlines</option>
+                    <option value="LATAM">LATAM</option>
+                    <option value="IB">Iberia</option>
+                </datalist>
+
+                
+                <!-- <label for="origin">Origen:</label> -->
+                <!-- <input type="text" id="origin" name="origin" required> -->
+                <!-- <label for="destination">Destino:</label> -->
+                <!-- <input type="text" id="destination" name="destination" required> -->
+                
+                <label for="origin">Origen</label>
+                <input
+                    type="text"
+                    id="origin"
+                    name="origin"
+                    list="airports"
+                    required
+                />
+
+                <label for="destination">Destino</label>
+                <input
+                    type="text"
+                    id="destination"
+                    name="destination"
+                    list="airports"
+                    required
+                />
+
+                <datalist id="airports">
+                    <option value="JFK">New York (JFK)</option>
+                    <option value="LAX">Los Angeles (LAX)</option>
+                    <option value="SCL">Santiago (SCL)</option>
+                    <option value="MAD">Madrid (MAD)</option>
+                </datalist>
+
+                
                 <label for="date">Fecha de partida:</label>
                 <input type="date" id="date" name="date" required>
                 <label for="time">Hora de partida:</label>
@@ -56,9 +102,12 @@
                 <p class="hint">*Si subes un CSV, los campos manuales serán ignorados.</p>
                 <!-- <br> -->
                 <button type="submit">Consultar retraso</button>
-                <div id="result"></div>
+                <!-- <div id="result"></div> -->
                 <!-- <hr> -->
             </form>
+        </section>
+        <section id="result" class="results-panel">
+            <!-- aquí se inyectan los resultados -->
         </section>
     </main>
     

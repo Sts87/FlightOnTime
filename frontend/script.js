@@ -8,16 +8,35 @@ function getDayOfWeek(dateString) {
     return date.getDay() === 0 ? 7 : date.getDay();
 }
 
-csvInput.addEventListener("change", () => {
-    const hasCsv = csvInput.files.length > 0;
+function disableManualInputs() {
+    formInputs.forEach(input => input.disabled = true);
+}
 
-    formInputs.forEach(input => {
-        input.disabled = hasCsv;
-    });
+function enableManualInputs() {
+    formInputs.forEach(input => input.disabled = false);
+}
+
+
+// csvInput.addEventListener("change", () => {
+//     const hasCsv = csvInput.files.length > 0;
+
+//     formInputs.forEach(input => {
+//         input.disabled = hasCsv;
+//     });
+// });
+
+csvInput.addEventListener("change", () => {
+    if (csvInput.files.length > 0) {
+        disableManualInputs();
+    } else {
+        enableManualInputs();
+    }
 });
+
 
 form.addEventListener('submit', async (e) => {
     e.preventDefault();
+    result.classList.remove("is-visible");
 
     result.textContent = "Procesando... ⏳";
 
@@ -32,7 +51,8 @@ form.addEventListener('submit', async (e) => {
             csvFormData.append("file", csvFile);
 
             const response = await fetch(
-                "http://localhost:8080/predict/csv",
+                "http://localhost:8000/predict/csv", //ruta fastapi
+                // "http://localhost:8080/predict/csv", //ruta java spring
                 {
                     method: "POST",
                     body: csvFormData
@@ -45,11 +65,43 @@ form.addEventListener('submit', async (e) => {
 
             const resData = await response.json();
 
-            result.innerHTML = `
-                <h2>📄 Predicción desde CSV</h2>
-                <p>Total de filas procesadas: ${resData.total}</p>
-                <p>✔️ Predicciones generadas correctamente</p>
+            let predictionsHtml = `
+                <h2>✨ Resultados desde CSV ✨</h2>
+                <p>📄 Total de filas procesadas: ${resData.total}</p>
+
+                <table border="1" cellpadding="6">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Probabilidad de retraso</th>
+                            <th>Resultado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
             `;
+
+            resData.predictions.forEach((pred, index) => {
+                predictionsHtml += `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>${(pred.probability * 100).toFixed(2)}%</td>
+                        <td>${pred.prediction === 1 ? "⏱️ Retrasado" : "✅ Puntual"}</td>
+                    </tr>
+                `;
+            });
+
+            predictionsHtml += `
+                    </tbody>
+                </table>
+            `;
+
+            result.innerHTML = predictionsHtml;
+            result.classList.add("is-visible");
+
+            // 🔄 liberar formulario manual después del CSV
+            csvInput.value = "";      // limpia el input file
+            enableManualInputs();     // reactiva inputs manuales
+
 
             return;
         }
@@ -63,14 +115,7 @@ form.addEventListener('submit', async (e) => {
         // Validaciones y transformaciones
         const [hour, minute] = data.time.split(':').map(Number);
         const timeInMinutes = hour * 60 + minute;
-
-        // const hour = parseInt(data.time.split(':')[0], 10);
-        // const minute = parseInt(data.time.split(':')[1], 10);
-        //const numericTime = hour * 100 + minute;
-
         const numericLength = parseInt(data.distance, 10);
-        //const timeDay = getTimeDay(hour);
-        //const durationCategory = categorizeDuration(numericLength);
         const dayOfWeek = getDayOfWeek(data.date);
 
         const payload = {
@@ -84,7 +129,10 @@ form.addEventListener('submit', async (e) => {
         console.log('Payload:', payload);
 
     //try {
-        const response = await fetch('http://localhost:8080/predict', {
+        const response = await fetch(
+                'http://localhost:8000/predict'// ruta fastapi
+                //'http://localhost:8080/predict' //ruta java spring
+            , {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(payload)
@@ -97,10 +145,32 @@ form.addEventListener('submit', async (e) => {
         const resData = await response.json();
         console.log(resData);
         result.innerHTML = `
-            <h2>✨ Resultados ✨</h2>
-            <p>🔮 Predicción: ${resData.prediction}</p>
-            <p>✈️ Probabilidad: ${resData.probability}</p>
-        `;
+                <h2>✨ Resultados ✨</h2>
+                <p>🔮 Predicción: </p>
+
+                <table border="1" cellpadding="6">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Probabilidad de retraso</th>
+                            <th>Resultado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>${(resData.probability * 100).toFixed(2)}%</td>
+                            <td>
+                                ${resData.prediction === 1
+                                    ? "⏱️ Retrasado"
+                                    : "✅ Puntual"}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            
+            `;
+        result.classList.add("is-visible");
     } catch (error) {
         console.error(error);
         result.textContent = 'Error al obtener la predicción. Por favor, inténtelo de nuevo más tarde.';
