@@ -1,7 +1,7 @@
 # ✈️ FlightOnTime – API de Predicción de Retrasos de Vuelos
 
 ## 📌 Descripción
-FlightOnTime FastAPI es un microservicio en Python que predice si un vuelo llegará retrasado usando datos históricos y un modelo de Machine Learning (Logistic Regression con umbral optimizado).  
+FlightOnTime FastAPI es un microservicio en Python que predice si un vuelo llegará retrasado usando datos históricos y un modelo de Machine Learning (Logistic Regression con calibracion y umbral optimizado).  
 Se expone como una **API REST** que puede ser consumida por cualquier frontend o servicio backend, incluyendo proyectos en Java.
 
 ---
@@ -80,8 +80,35 @@ http://127.0.0.1:8000
 ```
 http://127.0.0.1:8000/docs
 ```
+# 🧪 Contrato de la API
 
-## 🧪 Ejemplo de Uso (curl)
+1️⃣ Predicción individual (JSON)
+
+* Ruta: /predict
+* Método: POST
+* Headers: Content-Type: application/json
+* Body esperado:
+
+```json
+{
+  "Airline": "AA",
+  "AirportFrom": "SFO",
+  "AirportTo": "LAX",
+  "Time": 1430,
+  "Length": 120,
+  "DayOfWeek": 3
+}
+```
+Respuesta esperada:
+
+```json
+{
+  "prediction": 1,          // 1 = Retrasado, 0 = Puntual
+  "probability": 0.73       // Probabilidad de retraso
+}
+```
+
+🧪 Ejemplo de Uso (curl)
 
 ```bash
 curl -X POST http://127.0.0.1:8000/predict \
@@ -92,8 +119,7 @@ curl -X POST http://127.0.0.1:8000/predict \
     "AirportTo": "LAX",
     "Time": 1430,
     "Length": 120,
-    "TimeDay": "Afternoon", #Hay que retirar y adaptar a nuevo modelo
-    "Duration": "Medium" #Hay que retirar y adaptar a nuevo modelo
+    "DayOfWeek": 3
   }'
 ```
 
@@ -101,11 +127,36 @@ curl -X POST http://127.0.0.1:8000/predict \
 
 ```json
 {
-  "prediction": "Retrasado",
+  "prediction": 1, //"Retrasado"
   "probability": 0.73
 }
 ```
 
+2️⃣ Predicción por CSV (batch)
+
+* Ruta: /predict/csv
+* Método: POST
+* Headers: Content-Type: multipart/form-data
+* Body: archivo CSV con las mismas columnas que espera el modelo (Airline, AirportFrom, AirportTo, Time, Length, DayOfWeek).
+
+🧪 Ejemplo de Uso (curl):
+
+```bash
+curl -X POST http://127.0.0.1:8000/predict/csv \
+  -F "file=@D:/DEPLOY/FlightOnTime/backend-ml-model/app/csv_test.csv" //ajustar la ruta real del archivo
+```
+
+Respuesta esperada:
+```json
+{
+  "total": 3,
+  "predictions": [
+    {"prediction": 1, "probability": 0.73},
+    {"prediction": 0, "probability": 0.21},
+    {"prediction": 1, "probability": 0.65}
+  ]
+}
+```
 ---
 
 ## 📂 Estructura del Proyecto
@@ -113,46 +164,23 @@ curl -X POST http://127.0.0.1:8000/predict \
 ```
 FlightOnTime/
 ├─ app/
-│  ├─ main.py        # API FastAPI
-│  ├─ utils.py       # Funciones auxiliares
-│  ├─ schema.py      # Modelos Pydantic para request/response
-│  ├─ model.py       # Carga y manejo del modelo ML
-├─ model/
-│  ├─ flight_delay_bundle.joblib  # Modelo exportado
-│  ├─ flight_delay_model.onnx  # Modelo exportado
+│  ├─ main.py                 # API FastAPI
+│  ├─ utils.py                # Mapping columnas y verificación de datos para consumo del modelo
+│  ├─ schemas.py              # Modelos Pydantic para request/response
+│  ├─ onnx_model.py           # Lógica para cargar y predecir con ONNX
+├─ model/fastapi-model/
+│  ├─ flight_delay_model_calibrado.onnx
+│  ├─ flight_delay_threshold_calibrado.json
 ├─ requirements.txt
 ├─ README.md
 ```
-
----
-
-## 🔧 Cómo consumir la API desde Java
-
-El backend en Java puede consumir la API usando cualquier cliente HTTP (RestTemplate, HttpClient, OkHttp, etc.).
-Ejemplo en pseudocódigo:
-
-```java
-POST http://127.0.0.1:8000/predict
-Content-Type: application/json
-Body: {
-  "Airline": "AA",
-  "AirportFrom": "SFO",
-  "AirportTo": "LAX",
-  "Time": 1430,
-  "Length": 120
-}
-
-Response:
-{
-  "prediction": "Retrasado",
-  "probability": 0.73
-}
-```
-
 ---
 
 ## ✅ Buenas Prácticas
 
-* Mantener el modelo actualizado en `flight_delay_bundle.joblib` o `flight_delay_model.onnx`.
+
+* Mantener los modelos actualizados en `model/fastapi-model/`.
 * Siempre usar un entorno virtual para evitar conflictos de dependencias.
 * Versionar las dependencias en `requirements.txt`.
+* Validar los CSV antes de enviarlos para evitar errores de parsing.
+* Usar la ruta `/predict/csv` para batch y `/predict` para predicciones individuales.
