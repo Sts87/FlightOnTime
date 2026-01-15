@@ -16,15 +16,6 @@ function enableManualInputs() {
     formInputs.forEach(input => input.disabled = false);
 }
 
-
-// csvInput.addEventListener("change", () => {
-//     const hasCsv = csvInput.files.length > 0;
-
-//     formInputs.forEach(input => {
-//         input.disabled = hasCsv;
-//     });
-// });
-
 csvInput.addEventListener("change", () => {
     if (csvInput.files.length > 0) {
         disableManualInputs();
@@ -126,7 +117,7 @@ form.addEventListener('submit', async (e) => {
             Length: numericLength,
             DayOfWeek: dayOfWeek
         };
-        console.log('Payload:', payload);
+        //console.log('Payload:', payload);
 
     //try {
         const response = await fetch(
@@ -143,7 +134,7 @@ form.addEventListener('submit', async (e) => {
         }
 
         const resData = await response.json();
-        console.log(resData);
+        //console.log(resData);
         result.innerHTML = `
                 <h2>✨ Resultados ✨</h2>
                 <p>🔮 Predicción: </p>
@@ -173,6 +164,24 @@ form.addEventListener('submit', async (e) => {
         result.classList.add("is-visible");
     } catch (error) {
         console.error(error);
-        result.textContent = 'Error al obtener la predicción. Por favor, inténtelo de nuevo más tarde.';
+
+        // Diferenciar errores de red (microservicio caído) de otros errores
+        if (error instanceof TypeError && error.message.includes("Failed to fetch")) {
+            result.innerHTML = `
+                <div style="color: red; font-weight: bold;">
+                    ❌ No se pudo conectar con el servidor.<br>
+                    Por favor, inténtalo nuevamente más tarde.
+                </div>
+            `;
+        } else {
+            result.innerHTML = `
+                <div style="color: red; font-weight: bold;">
+                    ⚠️ Error al obtener la predicción.<br>
+                    Intenta nuevamente más tarde.
+                </div>
+            `;
+        }
+
+        result.classList.add("is-visible");
     }
 });
