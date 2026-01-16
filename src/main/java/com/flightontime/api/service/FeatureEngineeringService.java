@@ -30,7 +30,7 @@ public class FeatureEngineeringService {
 
     // Mapeos para aerolíneas (OneHotEncoding)
     private static final List<String> AIRLINES = Arrays.asList(
-            "AA", "AS", "B6", "DL", "F9", "G4", "HA", "NK", "UA", "WN"
+            "??", "US", "AA", "DL", "OO", "EV", "XE", "UA", "MQ", "WN"
     );
 
     // Días de la semana
@@ -91,7 +91,7 @@ public class FeatureEngineeringService {
             String airline = flight.aerolinea().toUpperCase();
             if (!AIRLINES.contains(airline)) {
                 System.out.println("⚠️ Aerolínea no reconocida: " + airline + ", usando AA por defecto");
-                airline = "AA"; // Default a AA si no existe
+                airline = "??"; // Default a AA si no existe
             }
             features.put("Airline", createStringTensor(env, new String[][]{{airline}}));
 

@@ -17,8 +17,8 @@ public final class ValidationConstants {
      * Usando Set para búsquedas más eficientes O(1).
      */
     public static final Set<String> VALID_AIRLINE_CODES = Set.of(
-            "AS", "AA", "AC", "AM", "CO", "DL", "FX", "HA",
-            "NW", "PO", "SW", "UA", "5X", "VS", "VB", "WS"
+            "CO", "US", "AA", "AS", "DL", "B6", "HA", "OO",
+            "9E", "OH", "EV", "XE", "YV", "UA", "MQ", "FL", "F9", "WN"
     );
 
     /**

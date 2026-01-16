@@ -23,7 +23,7 @@ import java.util.Map;
 @Service
 public class OnnxModelService {
 
-    @Value("${model.path:models/flight-model.onnx}")
+    @Value("${model.path:models/flight_delay_model_v2.onnx}")
     private String modelPath;
 
     private OrtEnvironment environment;

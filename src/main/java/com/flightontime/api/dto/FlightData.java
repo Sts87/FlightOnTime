@@ -45,7 +45,7 @@ public record FlightData(
         @Positive(message = "La distancia debe ser un número positivo")
         @Min(
                 value = ValidationConstants.MIN_DISTANCE_REQUIRED,
-                message = "La distancia mínima de vuelo debe ser de {value} millas"
+                message = "La distancia mínima de vuelo debe ser de {value} kilómetros"
         )
         Integer distancia
 ) {
