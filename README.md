@@ -95,7 +95,7 @@ El sistema utiliza un **umbral de 0.5 (50%)** para clasificar el vuelo:
 **Response (JSON):**
 ```json
 {
-  "estado": "DELAYED",
+  "estado": "Retrasado",
   "probabilidad": 0.55
 }
 ```

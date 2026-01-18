@@ -53,7 +53,7 @@ public class PredictionService {
             long label = (Long) result.get("label");
 
             // 3. Convertir a FlightStatus
-            FlightStatus status = label == 1 ? FlightStatus.DELAYED : FlightStatus.ON_TIME;
+            FlightStatus status = label == 1 ? FlightStatus.Retrasado : FlightStatus.Puntual;
 
             // 4. Redondear probabilidad
             double roundedProbability = Math.round(probability * 100.0) / 100.0;
@@ -101,7 +101,7 @@ public class PredictionService {
             long label = (Long) result.get("label");
 
             // 3. Convertir a FlightStatus
-            FlightStatus status = label == 1 ? FlightStatus.DELAYED : FlightStatus.ON_TIME;
+            FlightStatus status = label == 1 ? FlightStatus.Retrasado : FlightStatus.Puntual;
 
             // 4. Guardar en base de datos
             Flight flight = new Flight(flightData, status, probability);

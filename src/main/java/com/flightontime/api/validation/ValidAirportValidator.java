@@ -23,6 +23,17 @@ public class ValidAirportValidator implements ConstraintValidator<ValidAirport, 
             return true;
         }
 
-        return ValidationConstants.VALID_AIRPORT_CODES.contains(code);
+        boolean isValid = ValidationConstants.VALID_AIRPORT_CODES.contains(code);
+
+        // Si es inválido, construir mensaje personalizado con el valor
+        if (!isValid) {
+            context.disableDefaultConstraintViolation();
+            context.buildConstraintViolationWithTemplate(
+                    String.format("El código de aeropuerto '%s' no es válido o no está en la lista de aeropuertos permitidos. Por favor, verifica el código IATA.",
+                            code)
+            ).addConstraintViolation();
+        }
+
+        return isValid;
     }
 }

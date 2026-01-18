@@ -23,6 +23,18 @@ public class ValidAirlineValidator implements ConstraintValidator<ValidAirline, 
             return true;
         }
 
-        return ValidationConstants.VALID_AIRLINE_CODES.contains(code);
+        boolean isValid = ValidationConstants.VALID_AIRLINE_CODES.contains(code);
+
+        // Si es inválido, construir mensaje personalizado con el valor
+        if (!isValid) {
+            context.disableDefaultConstraintViolation();
+            context.buildConstraintViolationWithTemplate(
+                    String.format("El código de aerolínea '%s' no es válido. Aerolíneas soportadas: %s",
+                            code,
+                            String.join(", ", ValidationConstants.VALID_AIRLINE_CODES))
+            ).addConstraintViolation();
+        }
+
+        return isValid;
     }
 }

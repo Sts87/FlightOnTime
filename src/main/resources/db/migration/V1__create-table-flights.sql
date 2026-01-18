@@ -6,5 +6,6 @@ CREATE TABLE flights (
     fecha_de_partida DATETIME NOT NULL,
     distancia INT NOT NULL,
     estado VARCHAR(50) NOT NULL,
+    probabilidad DOUBLE NOT NULL,
     CONSTRAINT chk_distancia CHECK (distancia >= 0)
 );
