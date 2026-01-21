@@ -1,5 +1,4 @@
 html, body {
-    /* height: 100vh; */
     margin: 0;
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
@@ -15,18 +14,12 @@ body {
     background-image: url('./image/matthias-ebneter-eG-lN5G2xBU-unsplash.jpg');
     background-size: cover;
     background-position: center;
-    /* backdrop-filter: blur(.5px); */
-    /* background: linear-gradient(to bottom,  #5744b6, #cfc7fa); */
-    /* background: linear-gradient(to top,#ddd4c8,  #a3a3ff, #5744b6); */
-    /* background-color: rgb(185, 228, 232); */
     display: flex;
     flex-direction: column;
-    min-height: 100vh; /* asegura ocupar toda la pantalla */
-    /* font-family: Arial, Helvetica, sans-serif; */
+    min-height: 100vh;
     margin: 0 auto;
     width: 60%;
     padding: 0;
-    /* height: 100vh; */
 }
 
 header {
@@ -62,14 +55,10 @@ header nav ul li a {
     text-decoration: none;
 }
 
-main .prediction-form, main .results-panel {
+main .prediction-form, main .results-panel, .dashboard-stats {
     flex: 1;
-    /* background: linear-gradient(to top,#ddd4c8,  #a3a3ff, #5744b6); */
     background: linear-gradient(to bottom,  #5744b650, #cfc7fa40);
-    /* margin: 0 auto; */
-    /* max-width: 800px; */
     padding: 1.5em;
-    /* width: 65%; */
     backdrop-filter: blur(90px);
     border-radius: 10px;
 }
@@ -83,10 +72,6 @@ main .prediction-form, main .results-panel {
 main section {
     margin-bottom: 20px;
 }
-
-/* main section h2 {
-    margin-bottom: 10px;
-} */
 
 main section p {
     margin-bottom: 20px;
@@ -157,7 +142,6 @@ article a:focus {
 }
 
 #result {
-    /* padding: 1em; */
     text-align: center;
     display: none;
 }
@@ -172,12 +156,10 @@ article a:focus {
     padding: 1em;
 }
 
-
 form {
     display: flex;
     flex-direction: column;
     gap: .2em;
-
 }
 
 form label {
@@ -230,7 +212,6 @@ form button:focus {
 }
 
 table {
-    border-collapse: collapse;
     width: 100%;
     background-color: #b2b2f8;
 }
@@ -243,6 +224,52 @@ table th {
 
 table td {
     padding: 1em;
+}
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.5rem;
+    align-items: stretch;
+}
+
+.card {
+    background: rgba(255,255,255,0.08);
+    border-radius: 16px;
+    padding: 1rem;
+}
+
+.table-container {
+    max-height: 420px;
+    overflow-y: auto;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    background: #fff;
+    text-align: center;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+}
+
+.data-table thead {
+    position: sticky;
+    top: 0;
+    background: #f0f0f0;
+    z-index: 1;
+}
+
+.data-table th,
+.data-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #e5e7eb;
+    white-space: nowrap;
+}
+
+.data-table tbody tr:hover {
+    background: #f9fafb;
 }
 
 footer {
@@ -270,8 +297,6 @@ footer p {
 
     body {
         width: 90%;
-        /* margin: 0 auto; */
-        /* height: auto; */
     }
 }
 
@@ -280,22 +305,14 @@ footer p {
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 2rem;
-        /* margin: 0 auto; */
-        /* padding: 0 2rem; */
-        /* width: 60%; */
     }
 
     #result {
         order: 2;
-        /* max-width: 420px; */
-        /* text-align: left; */
         width: 100%;
-        /* max-height: 100%; */
     }
 
     .prediction-form {
         order: 1;
-        /* max-width: 620px; */
-        /* justify-self: end; */
     }
 }
