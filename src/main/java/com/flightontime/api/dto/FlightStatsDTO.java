@@ -7,7 +7,7 @@ import java.time.LocalDate;
  */
 public record FlightStatsDTO(
         LocalDate fecha,
-        Long totalVuelos,
+        Long totalConsultas,
         Long vuelosRetrasados,
         Long vuelosPuntuales,
         Double porcentajeRetrasados,
@@ -17,14 +17,14 @@ public record FlightStatsDTO(
     /**
      * Constructor de conveniencia para crear estadísticas con cálculos automáticos.
      */
-    public FlightStatsDTO(LocalDate fecha, Long totalVuelos, Long vuelosRetrasados, Double probabilidadPromedio) {
+    public FlightStatsDTO(LocalDate fecha, Long totalConsultas, Long vuelosRetrasados, Double probabilidadPromedio) {
         this(
                 fecha,
-                totalVuelos,
+                totalConsultas,
                 vuelosRetrasados,
-                totalVuelos - vuelosRetrasados,
-                totalVuelos > 0 ? (vuelosRetrasados * 100.0 / totalVuelos) : 0.0,
-                totalVuelos > 0 ? ((totalVuelos - vuelosRetrasados) * 100.0 / totalVuelos) : 0.0,
+                totalConsultas - vuelosRetrasados,
+                totalConsultas > 0 ? (vuelosRetrasados * 100.0 / totalConsultas) : 0.0,
+                totalConsultas > 0 ? ((totalConsultas - vuelosRetrasados) * 100.0 / totalConsultas) : 0.0,
                 probabilidadPromedio
         );
     }

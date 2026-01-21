@@ -1,9 +1,6 @@
 package com.flightontime.api.controller;
 
-import com.flightontime.api.dto.BatchPredictionResultDTO;
-import com.flightontime.api.dto.FlightData;
-import com.flightontime.api.dto.FlightStatsDTO;
-import com.flightontime.api.dto.PredictionResponse;
+import com.flightontime.api.dto.*;
 import com.flightontime.api.model.Flight;
 import com.flightontime.api.service.CsvService;
 import com.flightontime.api.service.FlightService;
@@ -107,6 +104,26 @@ public class FlightController {
     public ResponseEntity<FlightStatsDTO> getAllTimeStats() {
         FlightStatsDTO stats = statsService.getAllTimeStats();
         return ResponseEntity.ok(stats);
+    }
+
+    /**
+     * Endpoint para obtener rankings de aerolíneas.
+     * GET /flights/stats/airlines
+     */
+    @GetMapping("/stats/airlines")
+    public ResponseEntity<AirlineRankingsDTO> getAirlineRankings() {
+        AirlineRankingsDTO rankings = statsService.getAirlineRankings();
+        return ResponseEntity.ok(rankings);
+    }
+
+    /**
+     * Endpoint para obtener las últimas 5 predicciones realizadas.
+     * GET /flights/stats/recent
+     */
+    @GetMapping("/stats/recent")
+    public ResponseEntity<List<RecentPredictionDTO>> getRecentPredictions() {
+        List<RecentPredictionDTO> recentPredictions = statsService.getRecentPredictions();
+        return ResponseEntity.ok(recentPredictions);
     }
 
     /**

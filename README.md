@@ -14,7 +14,7 @@ El objetivo del backend de **FlightOnTime** es responder a la pregunta:
 
 A partir de la información proporcionada por el cliente, el sistema procesa los datos para devolver:
 
-- **Una clasificación**: `ON_TIME` o `DELAYED`.
+- **Una clasificación**: `Puntual` o `Retrasado`.
 - **Una probabilidad asociada**: Un valor entre 0 y 1 calculado mediante heurísticas de tiempo y distancia.
 - **Persistencia**: Almacenamiento automático del historial de consultas en MySQL.
 
@@ -70,8 +70,8 @@ El servicio implementa un **motor de cálculo** que estima el riesgo de retraso 
 
 El sistema utiliza un **umbral de 0.5 (50%)** para clasificar el vuelo:
 
-- **Probabilidad < 0.5**: El vuelo se clasifica como `ON_TIME`.
-- **Probabilidad ≥ 0.5**: El vuelo se clasifica como `DELAYED`.
+- **Probabilidad < 0.5**: El vuelo se clasifica como `Puntual`.
+- **Probabilidad ≥ 0.5**: El vuelo se clasifica como `Retrasado`.
 
 ---
 
