@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>✈️ FlightOnTime | Estadísticas de Predicción de retrasos de vuelos</title>
+
+    <meta name="description" content="Homepage of FlightOnTime, Web App to predict flight delays.">
+    <meta name="keywords" content="FlightOnTime, Prediction, Delays, Flights, Data Science">
+    <meta name="author" content="FlightOnTime">
+
+    <meta property="og:title" content="FlightOnTime | Frontend Developer">
+    <meta property="og:description" content="Single-page web for predicting flight delays.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://flightontime.dev">
+
+    <link rel="icon" href="./image/favicon.ico" type="image/png">
+    <link rel="stylesheet" href="style.css">
+<body>
+    <header>
+        <nav>
+            <h1>✈️FlightOnTime</h1>
+            <ul>
+                <li><a href="index.html">Predicciones</a></li>
+                <li><a href="dashboard.html">Estadísticas</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="dashboard-stats">
+        <section class="dashboard">
+            <h2>📊 Estadísticas</h2>
+            <br>
+
+            <div class="cards">
+                <div class="card">
+                    <div id="chartToday"></div>
+                </div>
+                <div class="card">
+                    <div id="chartAll"></div>
+                </div>
+                <!-- <div id="todayStats" class="card"></div> -->
+                <!-- <div id="allStats" class="card"></div> -->
+            </div>
+
+            <br>
+
+            <h2>Ranking Aerolíneas</h2>
+            <br>
+            <div class="cards">
+                <div class="card">
+                    <h3>🟢 Más Puntuales</h3>
+                    <br>
+                    <div id="airlinesPuntuales"></div>
+                    <!-- <table id="airlinesPuntuales"></table> -->
+                </div>
+                
+                <div class="card">
+                    <h3>🔴 Más Retrasadas</h3>
+                    <br>
+                    <!-- <table id="airlinesRetrasadas"></table> -->
+                    <div id="airlinesRetrasadas"></div>
+                </div>
+            </div>
+            <br>
+
+            <h2>Últimas Predicciones</h2>
+            <br>
+            <!-- <table id="recentTable"></table> -->
+            <div id="recentTable"></div>
+        </section>
+        <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+        <script src="dashboard.js"></script>
+    </main>
+    <footer>
+        <p>© 2026 FlightOnTime</p>
+    </footer>
+</body>
+</html>
