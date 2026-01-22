@@ -1,4 +1,9 @@
-const API = "http://localhost:8080";
+// ========================================
+// CONFIGURACIÓN Y CONSTANTES
+// ========================================
+
+//const API = "http://localhost:8080"; // localhost para desarrollo
+const API = "https://fly-on-time-production.up.railway.app"; // production
 const REFRESH_INTERVAL = 5000;
 
 // 🗃️ Estado anterior (para comparar)
@@ -6,12 +11,14 @@ let lastStats = null;
 let lastAirlines = null;
 let lastRecent = null;
 
+// 🔍 API REST
 async function apiGet(path) {
   const res = await fetch(`${API}${path}`);
   if (!res.ok) throw new Error(`Error ${res.status}`);
   return res.json();
 }
 
+// 🔍 Adaptar datos de estadísticas
 function adaptStats(data) {
   return {
     total: data.totalConsultas,
@@ -20,6 +27,7 @@ function adaptStats(data) {
   };
 }
 
+// 🔍 Adaptar datos de predicciones recientes
 function adaptRecent(data) {
   return data.map(f => ({
     route: `${f.origen} → ${f.destino}`,
@@ -32,15 +40,18 @@ function adaptRecent(data) {
   }));
 }
 
+// 🔍 Renderizar gráfico de donut
 function renderDonutChart(containerId, delayed, onTime, title) {
   const el = document.getElementById(containerId);
   el.innerHTML = "";
 
+  // Si no hay datos, mostrar mensaje
   if ((delayed + onTime) === 0) {
-    el.innerHTML = `<p style="opacity:.6">Sin datos disponibles</p>`;
+    el.innerHTML = `<p style="opacity:.6">Sin datos disponibles por el momento para consultas de el día de hoy.</p>`;
     return;
   }
 
+  // Opciones de gráfico
   const options = {
     chart: {
       type: "donut",
@@ -55,12 +66,15 @@ function renderDonutChart(containerId, delayed, onTime, title) {
     }
   };
 
+  // Renderizar gráfico
   new ApexCharts(el, options).render();
 }
 
+// 🔍 Renderizar tabla scrollable
 function renderScrollableTable(containerId, headers, rowsHtml) {
   const container = document.getElementById(containerId);
 
+  // Renderizar tabla
   container.innerHTML = `
     <div class="table-container">
       <table class="data-table">
@@ -77,6 +91,7 @@ function renderScrollableTable(containerId, headers, rowsHtml) {
   `;
 }
 
+// 🔍 Renderizar tabla de aerolíneas
 function renderAirlinesTable(containerId, airlines, mode) {
   const rows = airlines.map(a => `
     <tr>
@@ -90,6 +105,7 @@ function renderAirlinesTable(containerId, airlines, mode) {
     </tr>
   `).join("");
 
+  // Renderizar tabla
   renderScrollableTable(
     containerId,
     ["Aerolínea", "Total", `% ${mode === "puntuales" ? "Puntualidad" : "Retraso"}`],
@@ -97,7 +113,7 @@ function renderAirlinesTable(containerId, airlines, mode) {
   );
 }
 
-// 🔍 Comparar dos objetos (simple, para este caso)
+// 🔍 Comparar dos objetos, datos recientes y actuales
 function deepEqual(obj1, obj2) {
   if (obj1 === obj2) return true;
   if (obj1 == null || obj2 == null) return false;
@@ -130,6 +146,7 @@ async function loadStats() {
   const todayChanged = !lastStats || !deepEqual(lastStats.today, today);
   const allChanged = !lastStats || !deepEqual(lastStats.all, all);
 
+  // Si cambió, renderizar gráficos
   if (todayChanged || allChanged) {
     renderDonutChart(
       "chartToday",
@@ -138,6 +155,7 @@ async function loadStats() {
       "Hoy"
     );
 
+    // Renderizar gráfico de historial
     renderDonutChart(
       "chartAll",
       all.delayedPct,
@@ -154,6 +172,7 @@ async function loadStats() {
 async function loadAirlines() {
   const res = await apiGet("/flights/stats/airlines");
 
+  // Si no hay datos, mostrar mensaje
   if (!res.topPuntuales || !res.topRetrasadas) {
     console.warn("Formato inesperado stats/airlines:", res);
     return;
@@ -162,6 +181,7 @@ async function loadAirlines() {
   // 🆚 Comparar
   const airlinesChanged = !lastAirlines || !deepEqual(lastAirlines, res);
 
+  // Si cambió, renderizar tablas
   if (airlinesChanged) {
     renderAirlinesTable(
       "airlinesPuntuales",
@@ -169,6 +189,7 @@ async function loadAirlines() {
       "puntuales"
     );
 
+    // Renderizar tabla de retrasos
     renderAirlinesTable(
       "airlinesRetrasadas",
       res.topRetrasadas,
@@ -188,6 +209,7 @@ async function loadRecent() {
   // 🆚 Comparar (array de objetos)
   const recentChanged = !lastRecent || !deepEqual(lastRecent, flights);
 
+  // Si cambió, renderizar tabla
   if (recentChanged) {
     const rows = flights.map(f => `
       <tr>
@@ -198,6 +220,7 @@ async function loadRecent() {
       </tr>
     `).join("");
 
+    // Renderizar tabla
     renderScrollableTable(
       "recentTable",
       ["Ruta", "Aerolínea", "Retraso", "Hora de partida"],
@@ -209,6 +232,7 @@ async function loadRecent() {
   }
 }
 
+// 🔄 Cargar y comparar estadísticas, predicciones recientes y aerolíneas
 async function loadDashboard() {
   try {
     await Promise.all([
@@ -221,5 +245,7 @@ async function loadDashboard() {
   }
 }
 
+// Cargar y actualizar
 loadDashboard();
+// Actualizar cada 5 segundos
 setInterval(loadDashboard, REFRESH_INTERVAL);

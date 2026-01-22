@@ -15,26 +15,29 @@
     <meta property="og:url" content="https://flightontime.dev">
 
     <link rel="icon" href="./image/favicon.ico" type="image/png">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="./style.css">
 </head>
 <body>
     <header>
+        <!-- Navegación -->
         <nav>
             <h1>✈️FlightOnTime</h1>
             <ul>
-                <li><a href="index.html">Predicciones</a></li>
-                <li><a href="dashboard.html">Estadísticas</a></li>
+                <li><a href="./index.html">Predicciones</a></li>
+                <li><a href="./dashboard.html">Estadísticas</a></li>
             </ul>
         </nav>
     </header>
     
+    <!-- Contenido principal -->
     <main class="content-home">
+
+        <!-- Formulario de predicción -->
         <section class="prediction-form">
             <form id="flightForm" action="#" method="post">
                 <h2>Predicción de retrasos de vuelos 🔮</h2>
-                <!-- <label for="aeroline">Aerolinea:</label> -->
-                <!-- <input type="text" id="aeroline" name="aeroline" required> -->
                 
+                <!-- Input de aerolínea -->
                 <label for="airline">Aerolínea</label>
                 <input
                     type="text"
@@ -43,7 +46,7 @@
                     list="airlines"
                     required
                 />
-
+                <!-- Lista de aerolíneas -->
                 <datalist id="airlines">
                     <option value="AA">American Airlines</option>
                     <option value="DL">Delta Airlines</option>
@@ -65,6 +68,7 @@
                     <option value="CO">Continental Airlines</option>
                 </datalist>
 
+                <!-- Input de origen -->
                 <label for="origin">Origen</label>
                 <input
                     type="text"
@@ -74,6 +78,7 @@
                     required
                 />
 
+                <!-- Input de destino -->
                 <label for="destination">Destino</label>
                 <input
                     type="text"
@@ -83,6 +88,7 @@
                     required
                 />
 
+                <!-- Lista de aeropuertos -->
                 <datalist id="airports">
                     <option value="ABE">Allentown (ABE)</option>
                     <option value="ABI">Abilene (ABI)</option>
@@ -352,27 +358,19 @@
                     <option value="YUM">Yuma (YUM)</option>
                 </datalist>
 
-                
+                <!-- Input de fecha -->
                 <label for="date">Fecha de partida:</label>
                 <input type="date" id="date" name="date" required>
                 
+                <!-- Input de hora -->
                 <label for="time">Hora de partida:</label>
                 <input type="time" id="time" name="time" required>
                 
+                <!-- Input de distancia -->
                 <label for="distance">Distancia en km:</label>
                 <input type="number" id="distance" name="distance" required>
-                
-                <!-- <div class="form-group">
-                    <label for="duration">Duración (min):</label>
-                    <input
-                        type="number"
-                        id="duration"
-                        name="distance"
-                        min="20"
-                        placeholder="Se calculará automáticamente"
-                    >
-                </div> -->
 
+                <!-- Input de archivo CSV -->
                 <label for="csvFile">📄 Archivo CSV: (opcional)</label>
                 <input 
                     type="file" 
@@ -380,19 +378,25 @@
                     name="csvFile" 
                     accept=".csv"
                 />
-
                 <p class="hint">*Si subes un CSV, los campos manuales serán ignorados.</p>
+
+                <!-- Botón de enviar -->
                 <button type="submit">Consultar retraso</button>
             </form>
         </section>
+
+        <!-- Panel de resultados -->
         <section id="result" class="results-panel">
             <!-- aquí se inyectan los resultados -->
         </section>
     </main>
+
+    <!-- Pie de página -->
     <footer>
         <p>© 2026 FlightOnTime</p>
     </footer>
 
+    <!-- Scripts de logica de interfaz -->
     <script src="./script.js"></script>
 </body>
 </html>
