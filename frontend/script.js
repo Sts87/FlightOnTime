@@ -42,7 +42,8 @@ const VALID_AIRPORTS = [
     "XNA", "YAK", "YUM"
 ];
 
-const MIN_DISTANCE = 20; // min en realidad
+const MIN_DISTANCE = 200;
+const MAX_DISTANCE = 8000;
 
 // ========================================
 // DURACIÓN AUTOMÁTICA POR ORIGEN / DESTINO
@@ -173,9 +174,8 @@ function validateManualInput(data) {
     const distance = Number(data.distance);
 
     // Validar distancia
-    if (!Number.isInteger(distance) || distance < MIN_DISTANCE) {
-        return `La duración debe ser un número entero mayor o igual a ${MIN_DISTANCE} minutos.`;
-        //return `La distancia debe ser un número entero mayor o igual a ${MIN_DISTANCE} km.`;
+    if (!Number.isInteger(distance) || distance < MIN_DISTANCE  || distance > MAX_DISTANCE) {
+        return `La distancia debe ser un número positivo y entero mayor o igual a ${MIN_DISTANCE} km y menor o igual a ${MAX_DISTANCE} km.`;
     }
 
     // Validar aerolínea
