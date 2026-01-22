@@ -80,7 +80,14 @@ public class FeatureEngineeringService {
             features.put("AirportTo", createFloatTensor(env, new float[][]{{airportTo}}));
 
             // 3. Length (distancia) - FLOAT
-            float length = flight.distancia().floatValue();
+            float distanciaKm = flight.distancia().floatValue();
+            System.out.println("El valor de la distancia en kilómetros es: " + distanciaKm);
+
+            // Conversión distancia en kilómetros (distancia) a duración (length) en minutos.
+            // Velocidad promedio de avión comercial de 800 km/h
+            float length = (distanciaKm / 800) * 60;
+            System.out.println("El valor de la duracion en minutos es: " + length);
+
             features.put("Length", createFloatTensor(env, new float[][]{{length}}));
 
             // 4. Hour - FLOAT
@@ -90,8 +97,8 @@ public class FeatureEngineeringService {
             // 5. Airline - STRING (código de aerolínea directo)
             String airline = flight.aerolinea().toUpperCase();
             if (!AIRLINES.contains(airline)) {
-                System.out.println("⚠️ Aerolínea no reconocida: " + airline + ", usando AA por defecto");
-                airline = "??"; // Default a AA si no existe
+                System.out.println("⚠️ Aerolínea no reconocida: " + airline + ", usando ?? por defecto");
+                airline = "??"; // Default a ?? si no existe
             }
             features.put("Airline", createStringTensor(env, new String[][]{{airline}}));
 

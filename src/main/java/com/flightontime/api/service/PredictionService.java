@@ -1,6 +1,7 @@
 package com.flightontime.api.service;
 
 import ai.onnxruntime.OnnxTensor;
+import com.flightontime.api.config.ModelConfiguration;
 import com.flightontime.api.dto.BatchPredictionResultDTO;
 import com.flightontime.api.dto.FlightData;
 import com.flightontime.api.dto.PredictionResponse;
@@ -23,14 +24,17 @@ public class PredictionService {
     private final OnnxModelService modelService;
     private final FeatureEngineeringService featureService;
     private final FlightRepository repository;
+    private final ModelConfiguration modelConfig;
 
     public PredictionService(
             OnnxModelService modelService,
             FeatureEngineeringService featureService,
-            FlightRepository repository) {
+            FlightRepository repository,
+            ModelConfiguration modelConfig) {
         this.modelService = modelService;
         this.featureService = featureService;
         this.repository = repository;
+        this.modelConfig = modelConfig;
     }
 
     /**
@@ -50,10 +54,12 @@ public class PredictionService {
             // 2. Ejecutar predicción
             Map<String, Object> result = modelService.predict(features);
             double probability = (Double) result.get("probability");
-            long label = (Long) result.get("label");
 
-            // 3. Convertir a FlightStatus
-            FlightStatus status = label == 1 ? FlightStatus.Retrasado : FlightStatus.Puntual;
+            // 3. Convertir a FlightStatus usando el threshold óptimo
+            double threshold = modelConfig.getBestThreshold();
+            FlightStatus status = probability >= threshold
+                    ? FlightStatus.Retrasado
+                    : FlightStatus.Puntual;
 
             // 4. Redondear probabilidad
             double roundedProbability = Math.round(probability * 100.0) / 100.0;
@@ -64,6 +70,8 @@ public class PredictionService {
 
             return new PredictionResponse(status, roundedProbability);
 
+        } catch (Exception e) {
+            throw e;
         } finally {
             // 6. Limpiar recursos
             if (features != null) {
@@ -98,10 +106,12 @@ public class PredictionService {
             // 2. Ejecutar predicción
             Map<String, Object> result = modelService.predict(features);
             double probability = (Double) result.get("probability");
-            long label = (Long) result.get("label");
 
-            // 3. Convertir a FlightStatus
-            FlightStatus status = label == 1 ? FlightStatus.Retrasado : FlightStatus.Puntual;
+            // 3. Convertir a FlightStatus usando el threshold óptimo
+            double threshold = modelConfig.getBestThreshold();
+            FlightStatus status = probability >= threshold
+                    ? FlightStatus.Retrasado
+                    : FlightStatus.Puntual;
 
             // 4. Guardar en base de datos
             Flight flight = new Flight(flightData, status, probability);
@@ -126,4 +136,3 @@ public class PredictionService {
         }
     }
 }
-
