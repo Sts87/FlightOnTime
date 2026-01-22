@@ -2,8 +2,10 @@
 // CONFIGURACIÓN Y CONSTANTES
 // ========================================
 
-const API_BASE_URL = "http://localhost:8080/flights";
+//const API_BASE_URL = "http://localhost:8080/flights"; // localhost para desarrollo
+const API_BASE_URL = "https://fly-on-time-production.up.railway.app/flights"; // production
 
+// Lista de aerolíneas válidas del backend
 const VALID_AIRLINES = [
     "CO", "US", "AA", "AS", "DL", "B6", "HA", "OO",
     "9E", "OH", "EV", "XE", "YV", "UA", "MQ", "FL", "F9", "WN"
@@ -42,15 +44,9 @@ const VALID_AIRPORTS = [
     "XNA", "YAK", "YUM"
 ];
 
+// Mínimo y máximo de distancia permitida
 const MIN_DISTANCE = 200;
 const MAX_DISTANCE = 8000;
-
-// ========================================
-// DURACIÓN AUTOMÁTICA POR ORIGEN / DESTINO
-// ========================================
-
-let airports_arr = [];
-const AIRPORTS_AVG_URL = "airports_length_avg.json";
 
 // ========================================
 // ELEMENTOS DOM
@@ -65,14 +61,17 @@ const formInputs = document.querySelectorAll("#flightForm input:not(#csvFile)");
 // UTILIDADES
 // ========================================
 
+// Deshabilitar todos los campos de entrada manual
 function disableManualInputs() {
     formInputs.forEach(input => input.disabled = true);
 }
 
+// Habilitar todos los campos de entrada manual
 function enableManualInputs() {
     formInputs.forEach(input => input.disabled = false);
 }
 
+// Mostrar mensaje de error
 function showError(message) {
     result.innerHTML = `
         <div style="color: red; font-weight: bold;">
@@ -82,11 +81,13 @@ function showError(message) {
     result.classList.add("is-visible");
 }
 
+// Mostrar mensaje de cargando
 function showLoading() {
     result.classList.remove("is-visible");
     result.textContent = "Procesando... ⏳";
 }
 
+// Renderizar tabla scrollable
 function renderScrollableTable(container, headers, rowsHtml, options = {}) {
     const maxHeight = options.maxHeight || "420px";
 
@@ -106,6 +107,7 @@ function renderScrollableTable(container, headers, rowsHtml, options = {}) {
     `;
 }
 
+// Cargar datos de aeropuertos
 async function cargarAirportsData() {
     try {
         const response = await fetch(AIRPORTS_AVG_URL);
@@ -116,60 +118,11 @@ async function cargarAirportsData() {
     }
 }
 
-function buscarDuracion(origen, destino) {
-    if (!origen || !destino) return "";
-
-    const match = airports_arr.find(a =>
-        a.AirportFrom === origen && a.AirportTo === destino
-    );
-
-    return match ? Math.round(match.LengthAvg) : "";
-}
-
-// function actualizarDuracionAutomatica() {
-//     const origenInput = document.getElementById("origin");
-//     const destinoInput = document.getElementById("destination");
-//     const durationInput = document.getElementById("duration");
-
-//     const origen = origenInput.value.trim().toUpperCase();
-//     const destino = destinoInput.value.trim().toUpperCase();
-
-//     const duracion = buscarDuracion(origen, destino);
-
-//     if (duracion) {
-//         durationInput.value = duracion;
-//     } else {
-//         durationInput.value = "";
-//     }
-//     console.log("origen:", origen, "destino:", destino, "airports_arr.length:", airports_arr.length);
-
-// }
-function actualizarDuracionAutomatica() {
-    const origenInput = document.getElementById("origin");
-    const destinoInput = document.getElementById("destination");
-    const durationInput = document.getElementById("duration");
-
-    const origen = origenInput.value.trim().toUpperCase();
-    const destino = destinoInput.value.trim().toUpperCase();
-
-    // ✅ Esperar a que ambos campos tengan valor
-    if (!origen || !destino) {
-        durationInput.value = ""; // opcional: limpiar si falta info
-        return;
-    }
-
-    const duracion = buscarDuracion(origen, destino);
-
-    if (duracion) {
-        durationInput.value = duracion;
-    }
-}
-
-
 // ========================================
 // VALIDACIONES
 // ========================================
 
+// Validar datos de entrada manual
 function validateManualInput(data) {
     const distance = Number(data.distance);
 
@@ -224,9 +177,12 @@ function validateManualInput(data) {
 // ========================================
 
 async function handleCsvSubmission(csvFile) {
+
+    // Crear formulario de datos
     const formData = new FormData();
     formData.append("file", csvFile);
 
+    // Enviar formulario
     try {
         const response = await fetch(`${API_BASE_URL}/batch/predict`, {
             method: "POST",
@@ -244,6 +200,7 @@ async function handleCsvSubmission(csvFile) {
                     <ul style="text-align: left; max-height: 400px; overflow-y: auto;">
                 `;
                 
+                // Crear HTML de cada error
                 errorData.errores.forEach(err => {
                     errorHtml += `
                         <li>
@@ -262,8 +219,10 @@ async function handleCsvSubmission(csvFile) {
             throw new Error(errorData.mensaje || "Error al procesar el CSV");
         }
 
+        // Obtener predicciones
         const predictions = await response.json();
 
+        // Crear cabeceras
         const headers = [
             "#",
             "Aerolínea",
@@ -273,6 +232,7 @@ async function handleCsvSubmission(csvFile) {
             "Resultado"
         ];
 
+        // Mostrar resultados
         result.innerHTML = `
             <h2>✨ Resultados desde CSV ✨</h2>
             <p>📄 Total de filas procesadas: ${predictions.length}</p>
@@ -280,17 +240,25 @@ async function handleCsvSubmission(csvFile) {
             <div id="csv-table"></div>
         `;
 
+        // Crear HTML de tabla
         let rowsHtml = "";
 
+        // Recorrer cada predicción
         predictions.forEach((pred, index) => {
+
+            // Obtener porcentaje de probabilidad
             const probabilityPercent = (pred.probabilidad * 100).toFixed(2);
+
+            // Obtener estado de la predicción
             const isDelayed =
                 pred.estadoPredicho === "Retrasado" || pred.probabilidad >= 0.44;
 
+            // Obtener icono de estado
             const statusIcon = isDelayed ? "⏱️ Retrasado" : "✅ Puntual";
             const statusClass = isDelayed ? "status-delayed" : "status-ok";
             const statusColor = isDelayed ? "#ff6b6b" : "#51cf66";
 
+            // Crear HTML de fila
             rowsHtml += `
                 <tr>
                     <td>${index + 1}</td>
@@ -304,8 +272,11 @@ async function handleCsvSubmission(csvFile) {
                 </tr>
             `;
         });
+
+        // Crear contenedor de tabla
         const csvTableContainer = document.getElementById("csv-table");
 
+        // Renderizar tabla
         renderScrollableTable(
             csvTableContainer,
             headers,
@@ -315,12 +286,16 @@ async function handleCsvSubmission(csvFile) {
             }
         );
 
+        // Mostrar resultado
         result.classList.add("is-visible");
 
         // Limpiar formulario
         csvInput.value = "";
+
+        // Habilitar campos manuales
         enableManualInputs();
 
+    // Si ocurre algún error, mostrar mensaje
     } catch (error) {
         console.error("Error en CSV:", error);
         showError(error.message || "Error al procesar el archivo CSV");
@@ -332,6 +307,7 @@ async function handleCsvSubmission(csvFile) {
 // ========================================
 
 async function handleManualSubmission(data) {
+
     // Validar entrada
     const validationError = validateManualInput(data);
     if (validationError) {
@@ -339,6 +315,7 @@ async function handleManualSubmission(data) {
         return;
     }
 
+    // Crear payload
     const payload = {
         aerolinea: data.aerolinea,
         origen: data.origin,
@@ -347,6 +324,7 @@ async function handleManualSubmission(data) {
         distancia: Number(data.distance)
     };
 
+    // Enviar predicción
     try {
         const response = await fetch(`${API_BASE_URL}/predict`, {
             method: "POST",
@@ -354,6 +332,7 @@ async function handleManualSubmission(data) {
             body: JSON.stringify(payload)
         });
 
+        // Verificar respuesta
         if (!response.ok) {
             const errorData = await response.json();
             
@@ -367,20 +346,26 @@ async function handleManualSubmission(data) {
             throw new Error(errorData.mensaje || "Error al obtener la predicción");
         }
 
+        // Obtener predicción
         const prediction = await response.json();
 
+        // Obtener porcentaje de probabilidad
         const probabilityPercent = (prediction.probabilidad * 100).toFixed(2);
         
-        // CORRECCIÓN: Verificar si el estado es Retrasado o la probabilidad >= 44%
+        // Obtener estado de la predicción
         const isDelayed = prediction.estado === "Retrasado" || prediction.probabilidad >= 0.44;
+
+        // Obtener icono de estado
         const statusIcon = isDelayed ? "⏱️ Retrasado" : "✅ Puntual";
         const statusColor = isDelayed ? "#ff6b6b" : "#51cf66";
 
+        // Crear cabeceras
         const headers = [
             "Probabilidad de Retraso",
             "Resultado"
         ];
 
+        // Crear HTML de fila
         const rowsHtml = `
             <tr>
                 <td style="font-size: 1.4em; font-weight: bold;">
@@ -392,6 +377,7 @@ async function handleManualSubmission(data) {
             </tr>
         `;
 
+        // Mostrar resultado
         result.innerHTML = `
             <h2>✨ Resultado de la Predicción ✨</h2>
 
@@ -405,8 +391,10 @@ async function handleManualSubmission(data) {
             <div id="manual-table"></div>
         `;
 
+        // Crear contenedor de tabla de resultados
         const manualTableContainer = document.getElementById("manual-table");
 
+        // Renderizar tabla de resultados
         renderScrollableTable(
             manualTableContainer,
             headers,
@@ -414,8 +402,10 @@ async function handleManualSubmission(data) {
             { maxHeight: "200px" }
         );
 
+        // Mostrar resultado
         result.classList.add("is-visible");
 
+    // Si ocurre algún error, mostrar mensaje
     } catch (error) {
         console.error("Error en predicción individual:", error);
         
@@ -464,29 +454,3 @@ csvInput.addEventListener("change", () => {
         enableManualInputs();
     }
 });
-
-// ========================================
-// DOM CONTENT LOADED
-// ========================================
-
-// document.addEventListener("DOMContentLoaded", () => {
-//     cargarAirportsData();
-
-//     const origenInput = document.getElementById("origin");
-//     const destinoInput = document.getElementById("destination");
-
-//     origenInput.addEventListener("input", actualizarDuracionAutomatica);
-//     destinoInput.addEventListener("input", actualizarDuracionAutomatica);
-// });
-
-document.addEventListener("DOMContentLoaded", async() => {
-    await cargarAirportsData();
-
-    const origenInput = document.getElementById("origin");
-    const destinoInput = document.getElementById("destination");
-
-    origenInput.addEventListener("input", actualizarDuracionAutomatica);
-    destinoInput.addEventListener("input", actualizarDuracionAutomatica);
-
-});
-
