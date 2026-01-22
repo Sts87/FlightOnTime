@@ -23,7 +23,7 @@ El objetivo de FlightOnTime es responder a la siguiente pregunta:
 
 A partir de información básica del vuelo (aerolínea, hora, ruta, distancia, etc.), el sistema devuelve:
 
-* Una **clasificación**: `ON_TIME` o `DELAYED`
+* Una **clasificación**: `Puntual` o `Retrasado`
 * Una **probabilidad asociada** (valor entre 0 y 1)
 
 &nbsp;
@@ -38,9 +38,10 @@ La arquitectura está diseñada para ser **escalable y extensible**.
 
 ```
 ┌──────────────┐        ┌──────────────────┐        ┌───────────────────┐
-│   Cliente    │  --->  │  Backend API     │  --->  │  ML Model Service  │
-│ (Postman /  │        │ (Spring Boot)    │        │ (FastAPI / ONNX)  │
-│  Frontend)  │        └──────────────────┘        └───────────────────┘
+│   Cliente    │  --->  │  Backend API     │  --->  │  ML Model Service │
+│ (Postman /   │        │ (Spring Boot)    │        │ (FastAPI / ONNX)  │
+│  Frontend)   │        └──────────────────┘        └───────────────────┘
+└──────────────┘
 ```
 
 ### Tecnologías
@@ -145,20 +146,18 @@ Significa que, según los datos históricos, existe un **78% de probabilidad** d
 ### Endpoint Principal
 
 ```
-POST /predict
+POST /flights/predict
 ```
 
 ### Request (JSON)
 
 ```json
 {
-  "Airline": "AA",
-  "AirportFrom": "SFO",
-  "AirportTo": "LAX",
-  "Time": 1430,
-  "Length": 120,
-  "TimeDay": "Afternoon",
-  "Duration": "Medium"
+  "aerolinea": "UA",
+  "origen": "BNA",
+  "destino": "IAH",
+  "fechaDePartida": "2026-03-20T22:45:00",
+  "distancia": 400
 }
 ```
 
@@ -168,7 +167,6 @@ POST /predict
 {
   "prediction": "Retrasado",
   "probability": 0.73,
-  "threshold": 0.325
 }
 ```
 
@@ -183,35 +181,15 @@ POST /predict
 
 &nbsp;
 
-## 6️⃣ Cómo Ejecutar el Proyecto
+## 6️⃣ Modelo de Machine Learning
 
-### Backend (Spring Boot)
-
-```bash
-./mvnw spring-boot:run
-```
-
-El backend quedará disponible en:
-
-```
-http://localhost:8080
-```
-
-&nbsp;
-
----
-
-&nbsp;
-
-### Modelo de Machine Learning
-
-#### Opción 1: FastAPI
+### Opción 1: FastAPI
 
 ```bash
 uvicorn app:app --reload
 ```
 
-#### Opción 2: Modelo ONNX
+### Opción 2: Modelo ONNX
 
 * El modelo se carga directamente desde el backend
 * Inferencia local sin red
