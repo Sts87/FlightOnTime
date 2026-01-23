@@ -34,7 +34,6 @@ El sistema analiza factores históricos como aerolíneas, rutas, distancias y ho
 | **David Peña Pedraza** | [LinkedIn](https://www.linkedin.com/in/peña-pedraza-david/) |
 | **Javier Acevedo** | [LinkedIn](https://www.linkedin.com/in/javier-acevedo-fuentes-57013a12b/) |
 | **Edwin Alejandro Anona** | [LinkedIn](https://www.linkedin.com/in/edwin-alejandro-anona-6b0b4123b/) |
-| **Miguel Oñate** | [LinkedIn](#) |
 
 ### 📊 Data Scientists
 | Nombre | Perfil |
@@ -52,7 +51,7 @@ Para conocer más a detalle cada parte del proyecto, visita los submódulos corr
 
 * [**📁 Módulo de Backend**](https://github.com/flights-app-repo/FlightOnTime/blob/main/backend/README.md): Documentación de la API, endpoints, lógica de persistencia y guías de ejecución en Java.
 * [**📁 Módulo de Data Science**](https://github.com/flights-app-repo/FlightOnTime/blob/main/data-science/README.md): Detalles sobre el modelo de Machine Learning, dataset utilizado y métricas de evaluación.
-* * [**📁 Módulo de Frontend**](https://github.com/flights-app-repo/FlightOnTime/blob/main/frontend/README.md): Detalles sobre el Frontend. Tecnologías utilizadas: HTML, CSS, JavaScript y APEX Charts.
+* [**📁 Módulo de Frontend**](https://github.com/flights-app-repo/FlightOnTime/blob/main/frontend/README.md): Detalles sobre el Frontend. Tecnologías utilizadas: HTML, CSS, JavaScript y APEX Charts.
 
 ---
 
