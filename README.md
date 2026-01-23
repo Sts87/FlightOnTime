@@ -50,8 +50,9 @@ El sistema analiza factores históricos como aerolíneas, rutas, distancias y ho
 
 Para conocer más a detalle cada parte del proyecto, visita los submódulos correspondientes:
 
-* [**📁 Módulo de Backend**](https://github.com/Sts87/FlightOnTime/tree/feature/backend): Documentación de la API, endpoints, lógica de persistencia y guías de ejecución en Java.
-* [**📁 Módulo de Data Science**](https://github.com/Sts87/FlightOnTime/tree/feature/model-training): Detalles sobre el modelo de Machine Learning, dataset utilizado y métricas de evaluación.
+* [**📁 Módulo de Backend**](https://github.com/flights-app-repo/FlightOnTime/blob/main/backend/README.md): Documentación de la API, endpoints, lógica de persistencia y guías de ejecución en Java.
+* [**📁 Módulo de Data Science**](https://github.com/flights-app-repo/FlightOnTime/blob/main/data-science/README.md): Detalles sobre el modelo de Machine Learning, dataset utilizado y métricas de evaluación.
+* * [**📁 Módulo de Frontend**](https://github.com/flights-app-repo/FlightOnTime/blob/main/frontend/README.md): Detalles sobre el Frontend. Tecnologías utilizadas: HTML, CSS, JavaScript y APEX Charts.
 
 ---
 
