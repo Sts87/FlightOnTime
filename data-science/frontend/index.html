@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>✈️ FlightOnTime | Predicción de retrasos de vuelos</title>
+
+    <meta name="description" content="Homepage of FlightOnTime, Web App to predict flight delays.">
+    <meta name="keywords" content="FlightOnTime, Prediction, Delays, Flights, Data Science">
+    <meta name="author" content="FlightOnTime">
+
+    <meta property="og:title" content="FlightOnTime | Frontend Developer">
+    <meta property="og:description" content="Single-page web for predicting flight delays.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://flightontime.dev">
+
+    <link rel="icon" href="./image/favicon.ico" type="image/png">
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+    <header>
+        <!-- Navegación -->
+        <nav>
+            <h1>✈️FlightOnTime</h1>
+            <ul>
+                <li><a href="./index.html">Predicciones</a></li>
+                <li><a href="./dashboard.html">Estadísticas</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <!-- Contenido principal -->
+    <main class="content-home">
+
+        <!-- Formulario de predicción -->
+        <section class="prediction-form">
+            <form id="flightForm" action="#" method="post">
+                <h2>Predicción de retrasos de vuelos 🔮</h2>
+                
+                <!-- Input de aerolínea -->
+                <label for="airline">Aerolínea</label>
+                <input
+                    type="text"
+                    id="aerolinea"
+                    name="aeroline"
+                    list="airlines"
+                    required
+                />
+                <!-- Lista de aerolíneas -->
+                <datalist id="airlines">
+                    <option value="AA">American Airlines</option>
+                    <option value="DL">Delta Airlines</option>
+                    <option value="UA">United Airlines</option>
+                    <option value="WN">Southwest Airlines</option>
+                    <option value="US">US Airways</option>
+                    <option value="AS">Alaska Airlines</option>
+                    <option value="B6">JetBlue</option>
+                    <option value="HA">Hawaiian Airlines</option>
+                    <option value="OO">SkyWest</option>
+                    <option value="EV">ExpressJet</option>
+                    <option value="XE">ExpressJet (XE)</option>
+                    <option value="MQ">Envoy Air</option>
+                    <option value="9E">Endeavor Air</option>
+                    <option value="OH">PSA Airlines</option>
+                    <option value="YV">Mesa Airlines</option>
+                    <option value="FL">AirTran</option>
+                    <option value="F9">Frontier Airlines</option>
+                    <option value="CO">Continental Airlines</option>
+                </datalist>
+
+                <!-- Input de origen -->
+                <label for="origin">Origen</label>
+                <input
+                    type="text"
+                    id="origin"
+                    name="origin"
+                    list="airports"
+                    required
+                />
+
+                <!-- Input de destino -->
+                <label for="destination">Destino</label>
+                <input
+                    type="text"
+                    id="destination"
+                    name="destination"
+                    list="airports"
+                    required
+                />
+
+                <!-- Lista de aeropuertos -->
+                <datalist id="airports">
+                    <option value="ABE">Allentown (ABE)</option>
+                    <option value="ABI">Abilene (ABI)</option>
+                    <option value="ABQ">Albuquerque (ABQ)</option>
+                    <option value="ABY">Albany, GA (ABY)</option>
+                    <option value="ACT">Waco (ACT)</option>
+                    <option value="ACV">Arcata (ACV)</option>
+                    <option value="ACY">Atlantic City (ACY)</option>
+                    <option value="AEX">Alexandria, LA (AEX)</option>
+                    <option value="AGS">Augusta, GA (AGS)</option>
+                    <option value="ALB">Albany, NY (ALB)</option>
+                    <option value="AMA">Amarillo (AMA)</option>
+                    <option value="ANC">Anchorage (ANC)</option>
+                    <option value="ASE">Aspen (ASE)</option>
+                    <option value="ATL">Atlanta (ATL)</option>
+                    <option value="ATW">Appleton (ATW)</option>
+                    <option value="AUS">Austin (AUS)</option>
+                    <option value="AVL">Asheville (AVL)</option>
+                    <option value="AVP">Wilkes-Barre (AVP)</option>
+                    <option value="AZO">Kalamazoo (AZO)</option>
+                    <option value="BDL">Hartford (BDL)</option>
+                    <option value="BFL">Bakersfield (BFL)</option>
+                    <option value="BGM">Binghamton (BGM)</option>
+                    <option value="BGR">Bangor (BGR)</option>
+                    <option value="BHM">Birmingham, AL (BHM)</option>
+                    <option value="BIL">Billings (BIL)</option>
+                    <option value="BIS">Bismarck (BIS)</option>
+                    <option value="BKG">Branson (BKG)</option>
+                    <option value="BLI">Bellingham (BLI)</option>
+                    <option value="BMI">Bloomington, IL (BMI)</option>
+                    <option value="BNA">Nashville (BNA)</option>
+                    <option value="BOI">Boise (BOI)</option>
+                    <option value="BOS">Boston (BOS)</option>
+                    <option value="BQK">Brunswick, GA (BQK)</option>
+                    <option value="BQN">Aguadilla (BQN)</option>
+                    <option value="BRO">Brownsville (BRO)</option>
+                    <option value="BRW">Utqiagvik (BRW)</option>
+                    <option value="BTR">Baton Rouge (BTR)</option>
+                    <option value="BTV">Burlington, VT (BTV)</option>
+                    <option value="BUF">Buffalo (BUF)</option>
+                    <option value="BUR">Burbank (BUR)</option>
+                    <option value="BWI">Baltimore (BWI)</option>
+                    <option value="BZN">Bozeman (BZN)</option>
+                    <option value="CAE">Columbia, SC (CAE)</option>
+                    <option value="CAK">Akron (CAK)</option>
+                    <option value="CDV">Cordova (CDV)</option>
+                    <option value="CEC">Crescent City (CEC)</option>
+                    <option value="CHA">Chattanooga (CHA)</option>
+                    <option value="CHO">Charlottesville (CHO)</option>
+                    <option value="CHS">Charleston, SC (CHS)</option>
+                    <option value="CIC">Chico (CIC)</option>
+                    <option value="CID">Cedar Rapids (CID)</option>
+                    <option value="CLD">Carlsbad, CA (CLD)</option>
+                    <option value="CLE">Cleveland (CLE)</option>
+                    <option value="CLT">Charlotte (CLT)</option>
+                    <option value="CMH">Columbus, OH (CMH)</option>
+                    <option value="CMI">Champaign (CMI)</option>
+                    <option value="CMX">Houghton (CMX)</option>
+                    <option value="COD">Cody (COD)</option>
+                    <option value="COS">Colorado Springs (COS)</option>
+                    <option value="COU">Columbia, MO (COU)</option>
+                    <option value="CPR">Casper (CPR)</option>
+                    <option value="CRP">Corpus Christi (CRP)</option>
+                    <option value="CRW">Charleston, WV (CRW)</option>
+                    <option value="CSG">Columbus, GA (CSG)</option>
+                    <option value="CVG">Cincinnati (CVG)</option>
+                    <option value="CWA">Wausau (CWA)</option>
+                    <option value="CYS">Cheyenne (CYS)</option>
+                    <option value="DAB">Daytona Beach (DAB)</option>
+                    <option value="DAL">Dallas Love Field (DAL)</option>
+                    <option value="DAY">Dayton (DAY)</option>
+                    <option value="DCA">Washington Reagan (DCA)</option>
+                    <option value="DEN">Denver (DEN)</option>
+                    <option value="DFW">Dallas/Fort Worth (DFW)</option>
+                    <option value="DHN">Dothan (DHN)</option>
+                    <option value="DLH">Duluth (DLH)</option>
+                    <option value="DRO">Durango (DRO)</option>
+                    <option value="DSM">Des Moines (DSM)</option>
+                    <option value="DTW">Detroit (DTW)</option>
+                    <option value="EAU">Eau Claire (EAU)</option>
+                    <option value="ECP">Panama City (ECP)</option>
+                    <option value="EGE">Eagle (EGE)</option>
+                    <option value="EKO">Elko (EKO)</option>
+                    <option value="ELM">Elmira (ELM)</option>
+                    <option value="ELP">El Paso (ELP)</option>
+                    <option value="ERI">Erie (ERI)</option>
+                    <option value="EUG">Eugene (EUG)</option>
+                    <option value="EVV">Evansville (EVV)</option>
+                    <option value="EWR">Newark (EWR)</option>
+                    <option value="EYW">Key West (EYW)</option>
+                    <option value="FAI">Fairbanks (FAI)</option>
+                    <option value="FAR">Fargo (FAR)</option>
+                    <option value="FAT">Fresno (FAT)</option>
+                    <option value="FAY">Fayetteville, NC (FAY)</option>
+                    <option value="FCA">Kalispell (FCA)</option>
+                    <option value="FLG">Flagstaff (FLG)</option>
+                    <option value="FLL">Fort Lauderdale (FLL)</option>
+                    <option value="FNT">Flint (FNT)</option>
+                    <option value="FSD">Sioux Falls (FSD)</option>
+                    <option value="FSM">Fort Smith (FSM)</option>
+                    <option value="FWA">Fort Wayne (FWA)</option>
+                    <option value="GCC">Gillette (GCC)</option>
+                    <option value="GEG">Spokane (GEG)</option>
+                    <option value="GFK">Grand Forks (GFK)</option>
+                    <option value="GGG">Longview, TX (GGG)</option>
+                    <option value="GJT">Grand Junction (GJT)</option>
+                    <option value="GNV">Gainesville (GNV)</option>
+                    <option value="GPT">Gulfport (GPT)</option>
+                    <option value="GRB">Green Bay (GRB)</option>
+                    <option value="GRK">Killeen (GRK)</option>
+                    <option value="GRR">Grand Rapids (GRR)</option>
+                    <option value="GSO">Greensboro (GSO)</option>
+                    <option value="GSP">Greenville, SC (GSP)</option>
+                    <option value="GTF">Great Falls (GTF)</option>
+                    <option value="GTR">Columbus, MS (GTR)</option>
+                    <option value="HDN">Steamboat Springs (HDN)</option>
+                    <option value="HLN">Helena (HLN)</option>
+                    <option value="HNL">Honolulu (HNL)</option>
+                    <option value="HOU">Houston Hobby (HOU)</option>
+                    <option value="HPN">White Plains (HPN)</option>
+                    <option value="HRL">Harlingen (HRL)</option>
+                    <option value="HSV">Huntsville (HSV)</option>
+                    <option value="HTS">Huntington (HTS)</option>
+                    <option value="IAD">Washington Dulles (IAD)</option>
+                    <option value="IAH">Houston Bush (IAH)</option>
+                    <option value="ICT">Wichita (ICT)</option>
+                    <option value="IDA">Idaho Falls (IDA)</option>
+                    <option value="ILM">Wilmington (ILM)</option>
+                    <option value="IND">Indianapolis (IND)</option>
+                    <option value="ISP">Islip (ISP)</option>
+                    <option value="ITH">Ithaca (ITH)</option>
+                    <option value="ITO">Hilo (ITO)</option>
+                    <option value="IYK">Inyokern (IYK)</option>
+                    <option value="JAC">Jackson Hole (JAC)</option>
+                    <option value="JAN">Jackson, MS (JAN)</option>
+                    <option value="JAX">Jacksonville (JAX)</option>
+                    <option value="JFK">New York JFK (JFK)</option>
+                    <option value="JNU">Juneau (JNU)</option>
+                    <option value="KOA">Kona (KOA)</option>
+                    <option value="KTN">Ketchikan (KTN)</option>
+                    <option value="LAN">Lansing (LAN)</option>
+                    <option value="LAS">Las Vegas (LAS)</option>
+                    <option value="LAX">Los Angeles (LAX)</option>
+                    <option value="LBB">Lubbock (LBB)</option>
+                    <option value="LCH">Lake Charles (LCH)</option>
+                    <option value="LEX">Lexington (LEX)</option>
+                    <option value="LFT">Lafayette, LA (LFT)</option>
+                    <option value="LGA">New York LaGuardia (LGA)</option>
+                    <option value="LGB">Long Beach (LGB)</option>
+                    <option value="LIH">Lihue (LIH)</option>
+                    <option value="LIT">Little Rock (LIT)</option>
+                    <option value="LMT">Klamath Falls (LMT)</option>
+                    <option value="LNK">Lincoln (LNK)</option>
+                    <option value="LRD">Laredo (LRD)</option>
+                    <option value="LSE">La Crosse (LSE)</option>
+                    <option value="LWS">Lewiston, ID (LWS)</option>
+                    <option value="MAF">Midland (MAF)</option>
+                    <option value="MBS">Saginaw (MBS)</option>
+                    <option value="MCI">Kansas City (MCI)</option>
+                    <option value="MCO">Orlando (MCO)</option>
+                    <option value="MDT">Harrisburg (MDT)</option>
+                    <option value="MDW">Chicago Midway (MDW)</option>
+                    <option value="MEI">Meridian (MEI)</option>
+                    <option value="MEM">Memphis (MEM)</option>
+                    <option value="MFE">McAllen (MFE)</option>
+                    <option value="MFR">Medford (MFR)</option>
+                    <option value="MGM">Montgomery (MGM)</option>
+                    <option value="MHK">Manhattan, KS (MHK)</option>
+                    <option value="MHT">Manchester, NH (MHT)</option>
+                    <option value="MIA">Miami (MIA)</option>
+                    <option value="MKE">Milwaukee (MKE)</option>
+                    <option value="MLB">Melbourne (MLB)</option>
+                    <option value="MLI">Moline (MLI)</option>
+                    <option value="MLU">Monroe (MLU)</option>
+                    <option value="MOB">Mobile (MOB)</option>
+                    <option value="MOD">Modesto (MOD)</option>
+                    <option value="MOT">Minot (MOT)</option>
+                    <option value="MQT">Marquette (MQT)</option>
+                    <option value="MRY">Monterey (MRY)</option>
+                    <option value="MSN">Madison (MSN)</option>
+                    <option value="MSO">Missoula (MSO)</option>
+                    <option value="MSP">Minneapolis (MSP)</option>
+                    <option value="MSY">New Orleans (MSY)</option>
+                    <option value="MTJ">Montrose (MTJ)</option>
+                    <option value="MYR">Myrtle Beach (MYR)</option>
+                    <option value="OAJ">Jacksonville, NC (OAJ)</option>
+                    <option value="OAK">Oakland (OAK)</option>
+                    <option value="OGG">Kahului (OGG)</option>
+                    <option value="OKC">Oklahoma City (OKC)</option>
+                    <option value="OMA">Omaha (OMA)</option>
+                    <option value="ONT">Ontario, CA (ONT)</option>
+                    <option value="ORD">Chicago O'Hare (ORD)</option>
+                    <option value="ORF">Norfolk (ORF)</option>
+                    <option value="OTH">North Bend (OTH)</option>
+                    <option value="OTZ">Kotzebue (OTZ)</option>
+                    <option value="PAH">Paducah (PAH)</option>
+                    <option value="PBI">West Palm Beach (PBI)</option>
+                    <option value="PDX">Portland, OR (PDX)</option>
+                    <option value="PHF">Newport News (PHF)</option>
+                    <option value="PHL">Philadelphia (PHL)</option>
+                    <option value="PHX">Phoenix (PHX)</option>
+                    <option value="PIA">Peoria (PIA)</option>
+                    <option value="PIH">Pocatello (PIH)</option>
+                    <option value="PIT">Pittsburgh (PIT)</option>
+                    <option value="PNS">Pensacola (PNS)</option>
+                    <option value="PSC">Pasco (PSC)</option>
+                    <option value="PSE">Ponce (PSE)</option>
+                    <option value="PSP">Palm Springs (PSP)</option>
+                    <option value="PVD">Providence (PVD)</option>
+                    <option value="PWM">Portland, ME (PWM)</option>
+                    <option value="RAP">Rapid City (RAP)</option>
+                    <option value="RDM">Redmond (RDM)</option>
+                    <option value="RDU">Raleigh-Durham (RDU)</option>
+                    <option value="RIC">Richmond (RIC)</option>
+                    <option value="RKS">Rock Springs (RKS)</option>
+                    <option value="RNO">Reno (RNO)</option>
+                    <option value="ROA">Roanoke (ROA)</option>
+                    <option value="ROC">Rochester, NY (ROC)</option>
+                    <option value="ROW">Roswell (ROW)</option>
+                    <option value="RST">Rochester, MN (RST)</option>
+                    <option value="RSW">Fort Myers (RSW)</option>
+                    <option value="SAF">Santa Fe (SAF)</option>
+                    <option value="SAN">San Diego (SAN)</option>
+                    <option value="SAT">San Antonio (SAT)</option>
+                    <option value="SAV">Savannah (SAV)</option>
+                    <option value="SBA">Santa Barbara (SBA)</option>
+                    <option value="SBN">South Bend (SBN)</option>
+                    <option value="SBP">San Luis Obispo (SBP)</option>
+                    <option value="SCC">Prudhoe Bay (SCC)</option>
+                    <option value="SCE">State College (SCE)</option>
+                    <option value="SDF">Louisville (SDF)</option>
+                    <option value="SEA">Seattle (SEA)</option>
+                    <option value="SFO">San Francisco (SFO)</option>
+                    <option value="SGF">Springfield, MO (SGF)</option>
+                    <option value="SGU">St. George (SGU)</option>
+                    <option value="SHV">Shreveport (SHV)</option>
+                    <option value="SIT">Sitka (SIT)</option>
+                    <option value="SJC">San Jose (SJC)</option>
+                    <option value="SJU">San Juan (SJU)</option>
+                    <option value="SLC">Salt Lake City (SLC)</option>
+                    <option value="SMF">Sacramento (SMF)</option>
+                    <option value="SMX">Santa Maria (SMX)</option>
+                    <option value="SNA">Santa Ana (SNA)</option>
+                    <option value="SPI">Springfield, IL (SPI)</option>
+                    <option value="SRQ">Sarasota (SRQ)</option>
+                    <option value="STL">St. Louis (STL)</option>
+                    <option value="STT">St. Thomas (STT)</option>
+                    <option value="STX">St. Croix (STX)</option>
+                    <option value="SUN">Sun Valley (SUN)</option>
+                    <option value="SWF">Newburgh (SWF)</option>
+                    <option value="SYR">Syracuse (SYR)</option>
+                    <option value="TEX">Telluride (TEX)</option>
+                    <option value="TLH">Tallahassee (TLH)</option>
+                    <option value="TOL">Toledo (TOL)</option>
+                    <option value="TPA">Tampa (TPA)</option>
+                    <option value="TRI">Tri-Cities (TRI)</option>
+                    <option value="TUL">Tulsa (TUL)</option>
+                    <option value="TUS">Tucson (TUS)</option>
+                    <option value="TVC">Traverse City (TVC)</option>
+                    <option value="TWF">Twin Falls (TWF)</option>
+                    <option value="TXK">Texarkana (TXK)</option>
+                    <option value="TYS">Knoxville (TYS)</option>
+                    <option value="VLD">Valdosta (VLD)</option>
+                    <option value="VPS">Valparaiso (VPS)</option>
+                    <option value="XNA">Fayetteville, AR (XNA)</option>
+                    <option value="YAK">Yakutat (YAK)</option>
+                    <option value="YUM">Yuma (YUM)</option>
+                </datalist>
+
+                <!-- Input de fecha -->
+                <label for="date">Fecha de partida:</label>
+                <input type="date" id="date" name="date" required>
+                
+                <!-- Input de hora -->
+                <label for="time">Hora de partida:</label>
+                <input type="time" id="time" name="time" required>
+                
+                <!-- Input de distancia -->
+                <label for="distance">Distancia en km:</label>
+                <input type="number" id="distance" name="distance" required>
+
+                <!-- Input de archivo CSV -->
+                <label for="csvFile">📄 Archivo CSV: (opcional)</label>
+                <input 
+                    type="file" 
+                    id="csvFile" 
+                    name="csvFile" 
+                    accept=".csv"
+                />
+                <p class="hint">*Si subes un CSV, los campos manuales serán ignorados.</p>
+
+                <!-- Botón de enviar -->
+                <button type="submit">Consultar retraso</button>
+            </form>
+        </section>
+
+        <!-- Panel de resultados -->
+        <section id="result" class="results-panel">
+            <!-- aquí se inyectan los resultados -->
+        </section>
+    </main>
+
+    <!-- Pie de página -->
+    <footer>
+        <p>© 2026 FlightOnTime</p>
+    </footer>
+
+    <!-- Scripts de logica de interfaz -->
+    <script src="./script.js"></script>
+</body>
+</html>
