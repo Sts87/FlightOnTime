@@ -22,7 +22,16 @@
         <!-- Navegación -->
         <nav>
             <h1>✈️FlightOnTime</h1>
-            <ul>
+
+            <!-- Botón hamburguesa -->
+            <button class="hamburger" aria-label="Menú">
+                <span class="line"></span>
+                <span class="line"></span>
+                <span class="line"></span>
+            </button>
+
+            <!-- Menú real -->
+            <ul class="nav-menu">
                 <li><a href="./index.html">Predicciones</a></li>
                 <li><a href="./dashboard.html">Estadísticas</a></li>
             </ul>
@@ -398,5 +407,15 @@
 
     <!-- Scripts de logica de interfaz -->
     <script src="./script.js"></script>
+    <script>
+        // Botón hamburguesa
+        const hamburger = document.querySelector('.hamburger');
+        const navMenu = document.querySelector('.nav-menu');
+
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            navMenu.classList.toggle('active');
+        });
+    </script>
 </body>
 </html>

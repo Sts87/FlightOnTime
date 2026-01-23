@@ -21,7 +21,16 @@
         <!-- Navegación -->
         <nav>
             <h1>✈️FlightOnTime</h1>
-            <ul>
+
+            <!-- Botón hamburguesa -->
+            <button class="hamburger" aria-label="Menú">
+                <span class="line"></span>
+                <span class="line"></span>
+                <span class="line"></span>
+            </button>
+
+            <!-- Menú real -->
+            <ul class="nav-menu">
                 <li><a href="./index.html">Predicciones</a></li>
                 <li><a href="./dashboard.html">Estadísticas</a></li>
             </ul>
@@ -77,15 +86,25 @@
             <br>
             <div id="recentTable"></div>
         </section>
-
-        <!-- Scripts de ApexCharts y logica de interfaz -->
-        <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-        <script src="./dashboard.js"></script>
     </main>
-
+    
     <!-- Pie de página -->
     <footer>
         <p>© 2026 FlightOnTime</p>
     </footer>
+
+    <!-- Scripts de ApexCharts y logica de interfaz -->
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script src="./dashboard.js"></script>
+    <script>
+        // Botón hamburguesa
+        const hamburger = document.querySelector('.hamburger');
+        const navMenu = document.querySelector('.nav-menu');
+
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            navMenu.classList.toggle('active');
+        });
+    </script>
 </body>
 </html>

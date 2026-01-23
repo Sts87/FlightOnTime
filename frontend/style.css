@@ -26,6 +26,8 @@ header {
     color: #f6f6f6;
     padding: 1em;
     text-align: center;
+    position: relative;
+    z-index: 100;
 }
 
 header h1 {
@@ -48,6 +50,7 @@ header nav ul {
 
 header nav ul li {
     margin: 0 10px;
+    /* display: none; */
 }
 
 header nav ul li a {
@@ -282,25 +285,130 @@ footer p {
     margin: 0;
 }
 
+/* Estilos del botón hamburguesa */
+.hamburger {
+    display: none;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 24px;
+    height: 18px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    z-index: 100;
+}
+
+.hamburger .line {
+    width: 100%;
+    height: 2px;
+    background-color: #f6f6f6;
+    transition: all 0.3s ease;
+}
+
+/* Animación: hamburguesa → X */
+.hamburger.active .line:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+}
+.hamburger.active .line:nth-child(2) {
+    opacity: 0;
+}
+.hamburger.active .line:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+}
+
+/* Menú móvil */
+.nav-menu {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    gap: 1.5rem;
+}
+
+/* En móvil: ocultar menú y mostrar hamburguesa */
 @media (max-width: 600px) {
-    nav {
-        display: flex;
-        justify-content: center;
-        align-items: center;
+    h1 {
+        font-size: 1.5em;
+        margin-bottom: 0;
+    }
+    .nav-menu {
+        position: fixed;
+        top: -70px;
+        left: 0;
+        width: 100%;
+        background: rgba(0, 0, 0, 0.9);
         flex-direction: column;
+        align-items: center;
+        padding: 2rem 0;
+        gap: 2rem;
+        transform: translateY(-100%);
+        transition: transform 0.3s ease;
+        z-index: 99;
+        border-radius: 10px;
+    }
+
+    .nav-menu.active {
+        transform: translateY(70px);
+    }
+
+    .hamburger {
+        display: flex;
+    }
+
+    nav {
+        justify-content: space-between;
+        align-items: center;
+        padding: 1em;
+        flex-direction: row;
     }
 
     nav ul {
-        flex-direction: column;
         align-items: center;
+        gap: 1.5rem;
     }
 
     body {
         width: 90%;
     }
 }
+/* 
+@media (max-width: 600px) {
+    nav {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    nav ul {
+        flex-direction: column;
+        align-items: center;
+        gap: 1.5rem;
+    }
+
+    nav ul li {
+        padding: 0.5rem;
+    }
+
+    body {
+        width: 90%;
+    }
+} */
+
+@media (min-width: 600px) and (max-width: 1024px) {
+    header h1 {
+        font-size: 1em;
+    }
+    header nav {
+        font-size: 1em;
+    }
+}
 
 @media (min-width: 1024px) {
+    /* h1 {
+        font-size: 3em;
+    } */
     .content-home {
         display: grid;
         grid-template-columns: 1fr 1fr;
