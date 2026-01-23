@@ -1,0 +1,4 @@
+Airline,AirportFrom,AirportTo,DayOfWeek,Length,Time
+AA,SFO,LAX,3,95,14
+DL,ATL,MIA,1,40,6
+UA,JFK,LAX,5,320,9
