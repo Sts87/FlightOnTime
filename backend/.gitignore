@@ -11,8 +11,10 @@ venv/
 # Ignorar Modelos Entrenados
 *.pkl
 *.h5
+
 # *.joblib
-# models/
+*.joblib
+
 
 # Ignorar salidas de jupyter
 .ipynb_checkpoints
