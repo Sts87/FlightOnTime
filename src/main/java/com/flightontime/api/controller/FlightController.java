@@ -1,141 +1,81 @@
 package com.flightontime.api.controller;
 
+import com.flightontime.api.controller.doc.FlightApi;
 import com.flightontime.api.dto.*;
 import com.flightontime.api.model.Flight;
-import com.flightontime.api.service.CsvService;
-import com.flightontime.api.service.FlightService;
-import com.flightontime.api.service.PredictionService;
-import com.flightontime.api.service.StatsService;
+import com.flightontime.api.service.*;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-
 import java.time.LocalDate;
 import java.util.List;
 
-/**
- * Controlador REST para gestionar vuelos y predicciones.
- */
 @RestController
 @RequestMapping("/flights")
-@CrossOrigin(origins = "*", methods = {RequestMethod.POST, RequestMethod.GET})
-public class FlightController {
+@CrossOrigin(origins = "*") // Considera mover esto a una configuración global de WebMvcConfigurer
+@RequiredArgsConstructor
+public class FlightController implements FlightApi {
 
     private final FlightService flightService;
     private final PredictionService predictionService;
     private final CsvService csvService;
     private final StatsService statsService;
 
-    public FlightController(
-            FlightService flightService,
-            PredictionService predictionService,
-            CsvService csvService,
-            StatsService statsService) {
-        this.flightService = flightService;
-        this.predictionService = predictionService;
-        this.csvService = csvService;
-        this.statsService = statsService;
-    }
-
-    /**
-     * Endpoint para realizar una predicción individual.
-     */
+    @Override
     @PostMapping("/predict")
-    public ResponseEntity<PredictionResponse> predict(
-            @RequestBody @Valid FlightData datos) {
-
-        PredictionResponse response = predictionService.predict(datos);
-        return ResponseEntity.ok(response);
+    public ResponseEntity<PredictionResponse> predict(@RequestBody @Valid FlightData datos) {
+        return ResponseEntity.ok(predictionService.predict(datos));
     }
 
-    /**
-     * Endpoint para predicciones en lote mediante archivo CSV.
-     */
-    @PostMapping("/batch/predict")
-    public ResponseEntity<List<BatchPredictionResultDTO>> predecirBatch(
-            @RequestParam("file") MultipartFile file) {
-
-        // 1. Parsear CSV
-        List<FlightData> vuelosParaPredecir = csvService.parse(file);
-
-        // 2. Procesar predicciones en lote
-        List<BatchPredictionResultDTO> resultados =
-                predictionService.processBatchPrediction(vuelosParaPredecir);
-
-        // 3. Retornar resultados
-        return ResponseEntity.ok(resultados);
+    @Override
+    @PostMapping(value = "/batch/predict", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<List<BatchPredictionResultDTO>> predecirBatch(@RequestParam("file") MultipartFile file) {
+        List<FlightData> vuelos = csvService.parse(file);
+        return ResponseEntity.ok(predictionService.processBatchPrediction(vuelos));
     }
 
-    /**
-     * Endpoint para obtener estadísticas de vuelos del día actual o fecha específica.
-     * GET /flights/stats
-     * GET /flights/stats?date=2027-03-15
-     */
+    @Override
     @GetMapping("/stats")
     public ResponseEntity<FlightStatsDTO> getStats(
-            @RequestParam(required = false)
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-            LocalDate date) {
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
 
-        FlightStatsDTO stats;
-
-        if (date != null) {
-            // Estadísticas para una fecha específica
-            stats = statsService.getStatsForDate(date);
-        } else {
-            // Estadísticas del día actual
-            stats = statsService.getStatsForToday();
-        }
+        FlightStatsDTO stats = (date != null)
+                ? statsService.getStatsForDate(date)
+                : statsService.getStatsForToday();
 
         return ResponseEntity.ok(stats);
     }
 
-    /**
-     * Endpoint para obtener estadísticas de todos los tiempos.
-     * GET /flights/stats/all
-     */
+    @Override
     @GetMapping("/stats/all")
     public ResponseEntity<FlightStatsDTO> getAllTimeStats() {
-        FlightStatsDTO stats = statsService.getAllTimeStats();
-        return ResponseEntity.ok(stats);
+        return ResponseEntity.ok(statsService.getAllTimeStats());
     }
 
-    /**
-     * Endpoint para obtener rankings de aerolíneas.
-     * GET /flights/stats/airlines
-     */
+    @Override
     @GetMapping("/stats/airlines")
     public ResponseEntity<AirlineRankingsDTO> getAirlineRankings() {
-        AirlineRankingsDTO rankings = statsService.getAirlineRankings();
-        return ResponseEntity.ok(rankings);
+        return ResponseEntity.ok(statsService.getAirlineRankings());
     }
 
-    /**
-     * Endpoint para obtener las últimas 5 predicciones realizadas.
-     * GET /flights/stats/recent
-     */
+    @Override
     @GetMapping("/stats/recent")
     public ResponseEntity<List<RecentPredictionDTO>> getRecentPredictions() {
-        List<RecentPredictionDTO> recentPredictions = statsService.getRecentPredictions();
-        return ResponseEntity.ok(recentPredictions);
+        return ResponseEntity.ok(statsService.getRecentPredictions());
     }
 
-    /**
-     * Endpoint para listar todos los vuelos con paginación.
-     * GET /flights
-     * GET /flights?page=0&size=10
-     */
+    @Override
     @GetMapping
-    public ResponseEntity<Page<Flight>> listar(
-            @PageableDefault(size = 10, sort = {"aerolinea"}) Pageable paginacion) {
-
-        Page<Flight> flights = flightService.listarTodo(paginacion);
-        return ResponseEntity.ok(flights);
+    public ResponseEntity<Page<Flight>> listar(@PageableDefault(size = 10, sort = "aerolinea") Pageable pageable) {
+        // Spring convierte automáticamente ?page=0&size=10&sort=campo,asc en el objeto Pageable
+        return ResponseEntity.ok(flightService.listarTodo(pageable));
     }
 }
