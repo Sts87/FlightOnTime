@@ -29,7 +29,7 @@ public class OnnxModelService {
     public void init() {
         try {
             environment = OrtEnvironment.getEnvironment();
-
+            
             // LEER EL MODELO COMO BYTES (Solución para JAR/Railway)
             byte[] modelBytes = loadModelBytes();
 
@@ -50,12 +50,12 @@ public class OnnxModelService {
         if (cleanPath.startsWith("/")) cleanPath = cleanPath.substring(1);
 
         System.out.println("Buscando recurso en: " + cleanPath);
-
+        
         // Usamos el ClassLoader para leer dentro del JAR
         try (InputStream is = getClass().getClassLoader().getResourceAsStream(cleanPath)) {
             if (is == null) {
-                throw new IOException("No se encontró el archivo .onnx en la ruta: " + cleanPath +
-                        ". Verifica que esté en src/main/resources/" + cleanPath);
+                throw new IOException("No se encontró el archivo .onnx en la ruta: " + cleanPath + 
+                    ". Verifica que esté en src/main/resources/" + cleanPath);
             }
             return is.readAllBytes();
         }
@@ -65,7 +65,7 @@ public class OnnxModelService {
         try (OrtSession.Result result = session.run(features)) {
             // 1. Label
             long[] labels = (long[]) result.get("output_label").get().getValue();
-
+            
             // 2. Probabilidades
             Object probabilityOutput = result.get("output_probability").get().getValue();
             double probabilityDelayed = 0.0;
@@ -80,8 +80,8 @@ public class OnnxModelService {
             }
 
             return Map.of(
-                    "probability", probabilityDelayed,
-                    "label", labels[0]
+                "probability", probabilityDelayed,
+                "label", labels[0]
             );
         } catch (OrtException e) {
             throw new PredictionException("Error en la ejecución del modelo: " + e.getMessage());
@@ -107,5 +107,10 @@ public class OnnxModelService {
         } catch (OrtException e) {
             System.err.println("Error al cerrar recursos: " + e.getMessage());
         }
+    }
+
+    // EL MÉTODO QUE FALTABA:
+    public OrtEnvironment getEnvironment() {
+        return environment;
     }
 }
