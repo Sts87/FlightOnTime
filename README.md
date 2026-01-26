@@ -1,7 +1,7 @@
 # ✈️ Proyecto: FlightOnTime
 ### H12-25-L - Equipo 54
 
-[![Video](https://img.shields.io/badge/Enlace%20Demo-%20Youtube%20-%20red?logo=Youtube)](https://www.youtube.com/)
+[![Video](https://img.shields.io/badge/Enlace%20Demo-%20Youtube%20-%20red?logo=Youtube)](https://www.youtube.com/watch?v=A_0pzUPnKiw)
 
 **FlightOnTime** es un MVP (Producto Mínimo Viable) diseñado para predecir la probabilidad de retraso en vuelos comerciales. Este proyecto nace de la colaboración de talentos en Backend y Data Science para ofrecer una solución tecnológica que integra modelos de Machine Learning con una arquitectura de software robusta y escalable.
 
